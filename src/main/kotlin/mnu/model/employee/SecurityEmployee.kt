@@ -10,7 +10,6 @@ import javax.persistence.*
 @Table(name = "security_employees")
 class SecurityEmployee : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var employee: Employee? = null
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -15,7 +15,6 @@ import javax.persistence.Table
 @Table(name = "managers")
 class ManagerEmployee : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var employee: Employee? = null
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "manager")

@@ -24,7 +24,6 @@ class PurchaseRequest (
 ): BaseEntity<Long>() {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var request: Request? = null
 
 }

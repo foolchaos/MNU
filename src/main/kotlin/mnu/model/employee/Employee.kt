@@ -20,7 +20,7 @@ enum class PersonStatus {
 
 @Entity
 @Table(name = "employees")
-class Employee(
+open class Employee(
     @Column(nullable = false)
     var name: String,
     var dateOfEmployment: LocalDateTime? = null,
@@ -31,7 +31,6 @@ class Employee(
     var position: String? = null
 ) : BaseEntity<Long>() {
     @OneToOne
-    @MapsId
     var user: User? = null
 
     @Enumerated

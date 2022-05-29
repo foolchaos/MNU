@@ -19,10 +19,9 @@ class Client(
     var type: ClientType = ClientType.CUSTOMER
 ) : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var user: User? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "employee_user_id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "employee_id")
     var manager: ManagerEmployee? = null
 }

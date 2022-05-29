@@ -8,7 +8,6 @@ import javax.persistence.*
 @Table(name = "scientists")
 class ScientistEmployee : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var employee: Employee? = null
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "examinator")

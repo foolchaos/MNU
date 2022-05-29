@@ -7,7 +7,7 @@ import javax.validation.constraints.*
 @Entity
 @Table(
     name = "district_houses",
-    uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("shelter_сolumn", "shelter_row"))]
+    uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("shelterColumn", "shelterRow"))]
 )
 class DistrictHouse(
     @Min(0) @Max(14)

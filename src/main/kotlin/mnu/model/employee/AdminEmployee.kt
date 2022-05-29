@@ -11,6 +11,5 @@ import javax.persistence.Table
 @Table(name = "admins")
 class AdminEmployee : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var employee: Employee? = null
 }

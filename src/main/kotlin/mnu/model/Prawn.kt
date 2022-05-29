@@ -17,7 +17,6 @@ class Prawn(
     var name: String
 ) : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     var user: User? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,7 +24,7 @@ class Prawn(
     var districtHouse: DistrictHouse? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "employee_user_id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "employee_id")
     var manager: ManagerEmployee? = null
 
     /*
