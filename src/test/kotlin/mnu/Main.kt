@@ -1,0 +1,4 @@
+package mnu
+
+class Main {
+}
