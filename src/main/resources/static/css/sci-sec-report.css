@@ -1,0 +1,80 @@
+@import "common.css";
+
+.header {
+    grid-area: header;
+}
+
+.grid {
+    display: grid;
+    grid: "header header" 80px "inputs-top weapons" "inputs-bottom weapons";
+    padding: 0 5px;
+}
+
+.grid__inputs-top {
+    grid-area: inputs-top;
+    margin-top: 10px;
+}
+
+.grid__inputs-bottom {
+    grid-area: inputs-bottom;
+    text-align: left;
+}
+
+.text-area_big {
+    min-height: 200px;
+}
+
+.input_big {
+    width: 350px;
+}
+
+.grid__weapons-table {
+    max-height: 300px;
+    grid-area: weapons;
+    margin-top: 30px;
+}
+
+.grid__weapons-table table {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.grid__weapons-table td {
+    padding: 4px 10px;
+    border: 1px solid black;
+    word-break: break-word;
+}
+
+.grid__weapons-form {
+    grid-area: weapons;
+    text-align: left;
+}
+
+#weapons-tbody {
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid: "header" 80px "inputs-top" "weapons" "inputs-bottom";
+        padding: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    body {
+        margin: 5px;
+    }
+
+    .grid__weapons-table {
+        font-size: 16px;
+    }
+
+    .input_big {
+        width: 80vw;
+    }
+
+    .button:not(.button_round) {
+        width: 80vw;
+    }
+}

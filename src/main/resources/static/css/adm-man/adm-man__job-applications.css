@@ -1,0 +1,74 @@
+@import "../common.css";
+
+body {
+    margin: 0;
+}
+
+.content {
+    text-align: center;
+    padding: 0 4vw;
+    margin-top: 100px;
+}
+
+.content__item {
+    margin-top: 20px;
+    padding: 12px;
+    width: 500px;
+    border: 2px solid black;
+}
+
+.button-flex-row {
+    display: flex;
+    justify-content: center;
+}
+
+h2 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button-flex-row * {
+    margin: 0 15px;
+}
+
+
+.grid-button {
+    width: 13vw;
+    margin: auto;
+    text-align: center;
+}
+
+@media (max-width: 1000px) {
+    .grid-button {
+        width: 17vw;
+    }
+}
+
+@media (max-width: 700px) {
+    .content {
+        margin-top: 85px;
+        padding: 0 1vw;
+    }
+
+    .grid-button {
+        margin: 15px auto;
+        font-size: 22px;
+        width: 80vw;
+    }
+
+    .button-flex-row * {
+        font-size: 18px;
+        margin: 0 6px;
+    }
+}
+
+@media (max-width: 600px) {
+    .content__item {
+        width: 85vw;
+    }
+
+    h2 {
+        font-size: 23px;
+    }
+}

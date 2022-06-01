@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/shop.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="desktop-header fixed-header fixed-header_small flex-row-between">
+    <form method="get" action="#" th:action="@{/client/shop/} + ${category}"
+          class="flex-row-center mobile-hide">
+        <input type="search" name="name" class="search-bar-input" placeholder="Search..." th:value="${param.name}">
+        <input type="submit" class="search-bar-button button" value="Go!">
+        <input type="hidden" name="sort" th:value="${param.sort}"/>
+        <input type="hidden" name="type" th:value="${param.type}">
+    </form>
+
+    <div class="flex-row-center">
+        <b th:text="${user.user.login}"></b>
+        <a th:href="@{/profileClient}">
+            <img alt="Profile settings" class="shop-icon icon" th:src="@{/images/profile.png}">
+        </a>
+        <a th:href="@{/client/cart}">
+            <img alt="Cart" class="shop-icon icon" th:src="@{/images/cart.png}">
+        </a>
+    </div>
+</div>
+
+<div id="header_mobile" class="flex-row-center-left">
+    <img id="burger" alt="departments" class="shop-icon icon burger" th:src="@{/images/burger.png}">
+    <div class="mobile-title" th:text="${(param.type==null or param.type[0]=='') ? category : param.type}"></div>
+</div>
+
+<div class="grid">
+    <form method="get" action="#" th:action="@{/client/shop/} + ${category}"
+          class="mobile-hide grid__search-bar search-bar-sorter flex-row-right">
+        Sort by: &nbsp;
+        <select name="sort" class="input_big" onchange="this.form.submit()">
+            <option value="price_asc">Price (asc.)</option>
+            <option value="price_desc"
+                    th:selected="${param.sort != null ? param.sort[0] == 'price_desc' : false}">Price (desc.)
+            </option>
+        </select>
+        <input type="hidden" name="name" th:value="${param.name}"/>
+        <input type="hidden" name="type" th:value="${param.type}">
+    </form>
+
+    <form method="get" action="#" th:action="@{/client/shop/} + ${category}"
+          class="mobile-show grid__search-bar flex-row-between">
+        <span>
+            <input name="name" type="search" class="search-bar-input" placeholder="Search...">
+            <input type="submit" class="search-bar-button button" value="Go!">
+        </span>
+        <label class="search-bar-sorter flex-row-center">
+            Sort by: &nbsp;
+            <select name="sort" class="input_big">
+                <option value="price_asc">Price (asc.)</option>
+                <option value="price_desc" th:selected="${param.sort != null ? param.sort[0] == 'price_desc' : false}">
+                    Price (desc.)
+                </option>
+            </select>
+        </label>
+        <input type="hidden" name="type" th:value="${param.type}">
+    </form>
+
+    <div id="mobile-menu" class="grid__departments flex-column-no-center">
+        <a class="department-button bold"
+           th:classappend="${category == 'weapon' and (param.type==null or param.type[0]=='') ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name})}">
+            All weapons </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'melee' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='melee')}">
+            Melee weapons </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'pistol' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='pistol')}">
+            Pistols </a>
+        <a class="department-button"
+           th:classappend="${param.type?.get(0) == 'submachine_gun' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='submachine_gun')}">
+            SMGs </a>
+        <a class="department-button"
+           th:classappend="${param.type?.get(0) == 'assault_rifle' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='assault_rifle')}">
+            Assault riffles </a>
+        <a class="department-button"
+           th:classappend="${param.type?.get(0) == 'light_machine_gun' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='light_machine_gun')}">
+            Light machine guns </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'sniper_rifle' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='sniper_rifle')}">
+            Sniper rifles </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'alien' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/weapon(sort=${param.sort}, name=${param.name}, type='alien')}">
+            Alien weapon </a>
+        <a class="department-button bold"
+           th:classappend="${category == 'transport' and (param.type==null or param.type[0]=='') ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/transport(sort=${param.sort}, name=${param.name})}">
+            All transport </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'land' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/transport(sort=${param.sort}, name=${param.name}, type='land')}">
+            Land transport </a>
+        <a class="department-button" th:classappend="${param.type?.get(0) == 'air' ? 'chosen-department' : ''}"
+           th:href="@{/client/shop/transport(sort=${param.sort}, name=${param.name}, type='air')}">
+            Air transport </a>
+    </div>
+
+    <div class="grid__catalogue">
+        <div id="message" class="flash hidden"></div>
+        <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+        <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+        <div class="form-item gray flex-column" th:if="${items == null or items.isEmpty()}">
+            No items in this category
+        </div>
+
+        <div class="shop-item flex-column-around" th:each="item: ${items}"
+             th:classappend="|${item.type.name()=='MELEE' ? 'shop-item_melee' : item.type.name()=='PISTOL' ? 'shop-item_pistol' :
+              item.type.name()=='SUBMACHINE_GUN' ? 'shop-item_smg' : item.type.name()=='ASSAULT_RIFLE' ? 'shop-item_assault' :
+              item.type.name()=='LIGHT_MACHINE_GUN' ? 'shop-item_lmg' : item.type.name()=='SNIPER_RIFLE' ? 'shop-item_sniper' :
+              item.type.name()=='ALIEN' ? 'shop-item_alien' : item.type.name()=='LAND' ? 'shop-item_land' :
+              item.type.name()=='AIR' ? 'shop-item_air' : ''}|">
+            <div>
+                <b class="font-big" th:text="${item.name}"></b>
+                <div class="form-item" th:text="${item.description}"></div>
+                <div class="form-item_small" th:text="${item.price + ' c.u.'}"></div>
+                <div class="form-item_small" th:text="${item.quantity + ' pieces'}"></div>
+            </div>
+            <div class="button"
+                 th:classappend="${cartIds.contains(item.id) ? 'rejected' : 'approved'}"
+                 th:attr="data-type=${item.type.name()=='AIR' or item.type.name()=='LAND' ? 'TRANSPORT' : 'WEAPON'},
+                              data-id=${item.id}, data-action=${cartIds.contains(item.id) ? 'remove-from-cart' : 'add-to-cart'}"
+                 th:text="${cartIds.contains(item.id) ? 'Remove from cart' : 'Add to cart'}"
+                data-baseurl="/client/cart/modifyAjax">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mobile-footer flex-row-around">
+    <a th:href="@{/profileClient}">
+        <img alt="Profile settings" class="shop-icon icon" th:src="@{/images/profile.png}">
+    </a>
+    <a th:href="@{/client/cart}">
+        <img alt="Cart" class="shop-icon icon" th:src="@{/images/cart.png}">
+    </a>
+</div>
+
+<script rel="script" type="text/javascript" th:src="@{/js/shop.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

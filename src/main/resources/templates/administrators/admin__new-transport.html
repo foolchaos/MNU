@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adm-man/adm-man__new-weapons.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">New transport</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <a th:href="@{/}" class="grid-button button button_back_mobile">Main menu</a>
+        <a th:href="@{/admin/newWeapons}" class="grid-button button">
+            New weapons
+            <div class="notification-number" th:if="${new_weap_count > 0}" th:text="${new_weap_count}"></div>
+        </a>
+        <div class="grid-button button button_pressed"> New transport</div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-item gray" th:if="${requests == null or requests.isEmpty()}">
+        There are no new requests
+    </div>
+    <div th:each="request: ${requests}" class="content__item">
+        <div th:id="${'transport-content-' + request.id}" class="content__main transport-flex finished">
+            <div th:switch="${request.type.name()}">
+                <img class="icon_middle" th:case="LAND" alt="sniper rifle" th:src="@{/images/land.png}">
+                <img class="icon_middle" th:case="AIR" alt="alien" th:src="@{/images/air.png}">
+            </div>
+            <div class="transport-description">
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.requiredAccessLvl}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Price</b>
+                    <span th:text="${request.price}"></span>
+                </div>
+                <div th:id="${'transport-buttons-' + request.id}" class="form-item button-flex-row">
+                    <a th:attr="data-transport-id=${request.id}" data-action="accept" class="button approved">Accept</a>
+                    <a th:attr="data-transport-id=${request.id}" data-action="reject" class="button rejected">Reject</a>
+                </div>
+                <div th:id="${'transport-flash-' + request.id}" class="flash hidden">
+                    <div th:id="${'transport-flash-message-' + request.id}"></div>
+                    <button th:id="${'transport-undo-' + request.id}" th:attr="data-transport-id=${request.id}"
+                            data-action="undo" class="form-item button">Undo 10
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/administrators/admin__new-transport.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

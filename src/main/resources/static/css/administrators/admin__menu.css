@@ -1,0 +1,92 @@
+@import "../common.css";
+
+.header {
+    grid-area: header;
+    margin-top: 5px;
+    padding: 12px;
+}
+
+.grid-button {
+    margin: 15px auto auto auto;
+    height: 80px;
+    text-align: center;
+    font-size: 24px;
+    width: 220px;
+}
+
+.grid {
+    display: grid;
+    grid: "header header" 70px "flash flash" "district employees" "client-manufacturers experiments-articles" "prawn-vacancies new-weapons" "prawn-job-applications prawn-registration"
+}
+
+.flash {
+    grid-area: flash;
+}
+
+.district {
+    grid-area: district;
+    margin-right: 30px;
+}
+
+.experiments-articles {
+    grid-area: experiments-articles;
+    margin-left: 30px;
+}
+
+.clients-manufacturers {
+    grid-area: client-manufacturers;
+    margin-right: 30px;
+}
+
+.employees {
+    grid-area: employees;
+    margin-left: 30px;
+}
+
+.prawn-vacancies {
+    grid-area: prawn-vacancies;
+    margin-right: 30px;
+}
+
+.new-weapons {
+    grid-area: new-weapons;
+    margin-left: 30px;
+}
+
+.prawn-registration {
+    grid-area: prawn-registration;
+    margin-left: 30px;
+}
+
+.prawn-job-applications {
+    grid-area: prawn-job-applications;
+    margin-right: 30px;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid: "header" 70px "flash" "district" "employees" "client-manufacturers" "experiments-articles" "prawn-vacancies" "new-weapons" "prawn-job-applications" "prawn-registration"
+    }
+
+    .grid-button {
+        width: 75vw;
+        height: 40px;
+        margin: auto auto 15px auto;
+    }
+}
+
+@media (max-width: 290px) {
+    .new-weapons {
+        height: 60px;
+    }
+}
+
+@media (max-width: 208px) {
+    .new-weapons {
+        height: 90px;
+    }
+
+    .clients-manufacturers {
+        height: 80px;
+    }
+}

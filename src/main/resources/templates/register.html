@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/auth.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+<form action="#" th:action="@{/auth/register}" th:object="${form}" method="post" class="flex-column reg-lower">
+    <a class="login-page__back-link" th:href="@{/auth/login}">< back</a>
+    <label class="form-item">
+        <b>Login</b>
+        <input required th:field="*{username}" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Password</b>
+        <input required th:field="*{password}" type="password" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Email</b>
+        <input required th:field="*{email}" type="email" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Name</b>
+        <input required th:field="*{name}" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Who are you?</b>
+        <select id="type" name="type" class="input_big">
+            <option value="customer"> Customer</option>
+            <option value="manufacturer"> Manufacturer</option>
+        </select>
+    </label>
+    <input type="submit" class="form-item button" value="Register">
+</form>
+</body>
+</html>

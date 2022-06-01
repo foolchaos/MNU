@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/auth.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+<form action="#" method="post" th:action="@{/auth/login}" th:object="${form}" class="flex-column lower">
+    <label class="form-item">
+        <b>Login</b>
+        <input th:field="*{username}" required class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Password</b>
+        <input th:field="*{password}" required type="password" class="input_big">
+    </label>
+    <div th:if="${loginFailed}" class="form-item"><b>Incorrect login or password</b></div>
+    <input type="submit" class="form-item button" value="Log in">
+    <a class="form-item button" th:href="@{/auth/register}">Register</a>
+</form>
+</body>
+</html>

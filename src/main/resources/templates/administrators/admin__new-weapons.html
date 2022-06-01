@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adm-man/adm-man__new-weapons.css}">
+    <title>MNU</title>
+</head>
+<body data-role="admin">
+<div class="fixed-header fixed-header_small">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">New weapons</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <a th:href="@{/}" class="grid-button button button_back_mobile">Main menu</a>
+        <div class="grid-button button button_pressed"> New weapons</div>
+        <a th:href="@{/admin/newTransport}" class="grid-button button">
+            New transport
+            <div class="notification-number" th:if="${new_tran_count > 0}" th:text="${new_tran_count}"></div>
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-item gray" th:if="${requests == null or requests.isEmpty()}">
+        There are no new requests
+    </div>
+    <div th:each="request: ${requests}" class="content__item">
+        <div th:id="${'weapon-content-' + request.id}" class="content__main weapon-flex finished">
+            <div th:switch="${request.type.name()}">
+                <img class="icon_middle" th:case="MELEE" alt="melee" th:src="@{/images/melee.png}">
+                <img class="icon_middle" th:case="PISTOL" alt="pistol" th:src="@{/images/pistol.svg}">
+                <img class="icon_middle" th:case="SUBMACHINE_GUN" alt="submachine gun" th:src="@{/images/smg.png}">
+                <img class="icon_middle" th:case="ASSAULT_RIFLE" alt="assault rifle" th:src="@{/images/assault.png}">
+                <img class="icon_middle" th:case="LIGHT_MACHINE_GUN" alt="light machine gun"
+                     th:src="@{/images/minigun.png}">
+                <img class="icon_middle" th:case="SNIPER_RIFLE" alt="sniper rifle" th:src="@{/images/sniper.png}">
+                <img class="icon_middle" th:case="ALIEN" alt="alien" th:src="@{/images/alien.png}">
+            </div>
+            <div class="weapon-description">
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.requiredAccessLvl}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Price</b>
+                    <span th:text="${request.price}"></span>
+                </div>
+                <div th:if="${request.quantity > 0}" class="form-item_small">
+                    <b>Quantity</b>
+                    <span th:text="${request.quantity}"></span>
+                </div>
+                <div class="form-item_small" th:switch="${request.user.role.name()}">
+                    <b th:case="SCIENTIST">Synthesized</b>
+                    <b th:case="SECURITY">Confiscated</b>
+                    <b th:case="MANUFACTURER">Manufacturer's suggestion</b>
+                </div>
+                <div th:id="${'weapon-buttons-' + request.id}" class="form-item button-flex-row">
+                    <a th:attr="data-weapon-id=${request.id}" data-action="accept" class="button approved">Accept</a>
+                    <a th:attr="data-weapon-id=${request.id}" data-action="reject" class="button rejected">Reject</a>
+                </div>
+                <div th:id="${'weapon-flash-' + request.id}" class="flash hidden">
+                    <div th:id="${'weapon-flash-message-' + request.id}"></div>
+                    <button th:id="${'weapon-undo-' + request.id}" th:attr="data-weapon-id=${request.id}"
+                            data-action="undo" class="form-item button">Undo 10
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/adm-man/adm-man__new-weapons.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

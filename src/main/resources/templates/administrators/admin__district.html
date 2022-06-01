@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/administrators/admin__district.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="grid">
+    <div class="flex-row-center-left header">
+        <a th:href="@{/admin/main}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <div th:if="${status}" th:text="${status}" class="flash flash_success flash_royal"></div>
+        <div th:if="${error}" th:text="${error}" class="flash flash_error flash_royal"></div>
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"
+         class="district-grid">
+        <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+            <path d="M 25 0 L 0 0 0 25" fill="none" stroke="gray"></path>
+        </pattern>
+        <rect width="100%" height="100%" fill="url(#grid)" stroke="black"></rect>
+        <circle th:each="inc : ${current_incidents}" class="clickable-circle" th:attr="data-id=${inc.id},
+            data-description=${inc.description}, data-date=${inc.appearanceTime}, data-id=${inc.id},
+            data-house='(' + ${inc.house.shelterColumn} + ' ; ' + ${inc.house.shelterRow} + ')',
+            cx=${inc.house.shelterColumn}*25 + 25, cy=400 - ${inc.house.shelterRow}*25 - 25,
+            fill=|${inc.dangerLevel==1 ? 'yellow' : inc.dangerLevel==2 ? 'orange' : 'red'}|" r="12">
+        </circle>
+    </svg>
+
+    <div class="form flex-column-left">
+        <div class="flex-row-center">
+            <div id="incident-circle" class="danger-circle"></div>
+            <div id="incident-description">Choose incident</div>
+        </div>
+        <div class="form-item_small" id="incident-house"></div>
+        <div class="form-item_small" id="incident-date"></div>
+
+        <form class="flex-column-left" action="#" th:action="@{/admin/appointResolvers}" th:object="${form}"
+              method="post">
+            <label class="form-item">
+                <b>Incident Id</b>
+                <input id="incidentId" name="incidentId" readonly required class="input_big"
+                       placeholder="Click on a dot to fill">
+            </label>
+            <label class="form-item">
+                <b>Number of security employees necessary</b>
+                <input id="securityNeeded" name="securityNeeded" required type="number" min="1" step="1"
+                       class="input_big">
+            </label>
+            <label class="form-item">
+                <b>Min. security level</b>
+                <input id="levelFrom" name="levelFrom" required type="number" min="1" max="10" step="1"
+                       class="input_big">
+            </label>
+            <label class="form-item">
+                <b>Max. security level</b>
+                <input id="levelTo" name="levelTo" required type="number" min="1" max="10" step="1" class="input_big">
+            </label>
+            <input type="submit" value="Resolve" class="form-item button">
+        </form>
+    </div>
+</div>
+
+<div class="mobile-error">
+    Managing district incidents on constrained devices is prohibited by law
+    due to an excessively high percentage of false resolutions.
+    Please use a desktop machine.
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/administrators/admin__district.js}"></script>
+</body>
+</html>

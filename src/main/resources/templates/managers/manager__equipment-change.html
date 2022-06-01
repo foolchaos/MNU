@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/managers/manager__equipment-change.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1>New equipment requests</h1>
+</div>
+
+<div class="content">
+    <div class="form-item gray" th:if="${requests == null or requests.isEmpty()}">
+        There are no new requests
+    </div>
+    <div th:each="request: ${requests}" class="content__item content__main flex-column finished"
+         th:id="${'request-content-' + request.id}">
+        <div>
+            <span>Requester: </span> <b th:text="${request.employee.employee.name}"></b>
+        </div>
+        <div class="form-item_micro" th:text="${'Salary: ' + request.employee.employee.salary + ' c.u.'}"></div>
+        <div class="form-item_micro" th:text="${'Level: ' + request.employee.employee.level}"></div>
+
+        <div th:if="${request.employee.weapon != null}" class="weapon-flex form-item">
+            <div th:switch="${request.employee.weapon.type.name()}">
+                <img class="icon_middle" th:case="MELEE" alt="melee" th:src="@{/images/melee.png}">
+                <img class="icon_middle" th:case="PISTOL" alt="pistol" th:src="@{/images/pistol.svg}">
+                <img class="icon_middle" th:case="SUBMACHINE_GUN" alt="submachine gun" th:src="@{/images/smg.png}">
+                <img class="icon_middle" th:case="ASSAULT_RIFLE" alt="assault rifle" th:src="@{/images/assault.png}">
+                <img class="icon_middle" th:case="LIGHT_MACHINE_GUN" alt="light machine gun"
+                     th:src="@{/images/minigun.png}">
+                <img class="icon_middle" th:case="SNIPER_RIFLE" alt="sniper rifle" th:src="@{/images/sniper.png}">
+                <img class="icon_middle" th:case="ALIEN" alt="alien" th:src="@{/images/alien.png}">
+                <img class="icon_middle" th:case="LAND" alt="sniper rifle" th:src="@{/images/land.png}">
+                <img class="icon_middle" th:case="AIR" alt="alien" th:src="@{/images/air.png}">
+            </div>
+            <div class="weapon-description">
+                <b>Current weapon</b>
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.employee.weapon.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.employee.weapon.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.employee.weapon.requiredAccessLvl}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${request.employee.weapon == null}" class="form-item weapon-flex">
+            <div class="blank-weapon-icon"></div>
+            <b class="weapon-description"> Current weapon: none </b>
+        </div>
+
+        <div th:if="${request.employee.transport != null}" class="weapon-flex form-item">
+            <div th:switch="${request.employee.transport.type.name()}">
+                <img class="icon_middle" th:case="MELEE" alt="melee" th:src="@{/images/melee.png}">
+                <img class="icon_middle" th:case="PISTOL" alt="pistol" th:src="@{/images/pistol.svg}">
+                <img class="icon_middle" th:case="SUBMACHINE_GUN" alt="submachine gun" th:src="@{/images/smg.png}">
+                <img class="icon_middle" th:case="ASSAULT_RIFLE" alt="assault rifle" th:src="@{/images/assault.png}">
+                <img class="icon_middle" th:case="LIGHT_MACHINE_GUN" alt="light machine gun"
+                     th:src="@{/images/minigun.png}">
+                <img class="icon_middle" th:case="SNIPER_RIFLE" alt="sniper rifle" th:src="@{/images/sniper.png}">
+                <img class="icon_middle" th:case="ALIEN" alt="alien" th:src="@{/images/alien.png}">
+                <img class="icon_middle" th:case="LAND" alt="sniper rifle" th:src="@{/images/land.png}">
+                <img class="icon_middle" th:case="AIR" alt="alien" th:src="@{/images/air.png}">
+            </div>
+            <div class="weapon-description">
+                <b>Current transport</b>
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.employee.transport.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.employee.transport.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.employee.transport.requiredAccessLvl}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${request.employee.transport == null}" class="form-item weapon-flex">
+            <div class="blank-weapon-icon"></div>
+            <b class="weapon-description"> Current transport: none </b>
+        </div>
+
+        <div th:if="${request.weapon != null}" class="weapon-flex form-item">
+            <div th:switch="${request.weapon.type.name()}">
+                <img class="icon_middle" th:case="MELEE" alt="melee" th:src="@{/images/melee.png}">
+                <img class="icon_middle" th:case="PISTOL" alt="pistol" th:src="@{/images/pistol.svg}">
+                <img class="icon_middle" th:case="SUBMACHINE_GUN" alt="submachine gun" th:src="@{/images/smg.png}">
+                <img class="icon_middle" th:case="ASSAULT_RIFLE" alt="assault rifle" th:src="@{/images/assault.png}">
+                <img class="icon_middle" th:case="LIGHT_MACHINE_GUN" alt="light machine gun"
+                     th:src="@{/images/minigun.png}">
+                <img class="icon_middle" th:case="SNIPER_RIFLE" alt="sniper rifle" th:src="@{/images/sniper.png}">
+                <img class="icon_middle" th:case="ALIEN" alt="alien" th:src="@{/images/alien.png}">
+                <img class="icon_middle" th:case="LAND" alt="sniper rifle" th:src="@{/images/land.png}">
+                <img class="icon_middle" th:case="AIR" alt="alien" th:src="@{/images/air.png}">
+            </div>
+            <div class="weapon-description">
+                <b>New weapon</b>
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.weapon.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.weapon.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.weapon.requiredAccessLvl}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Price</b>
+                    <span th:text="${request.weapon.price}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Quantity</b>
+                    <span th:text="${request.weapon.quantity}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${request.weapon == null}" class="form-item weapon-flex">
+            <div class="blank-weapon-icon"></div>
+            <b class="weapon-description"> New weapon: none </b>
+        </div>
+
+        <div th:if="${request.transport!= null}" class="weapon-flex form-item">
+            <div th:switch="${request.transport.type.name()}">
+                <img class="icon_middle" th:case="MELEE" alt="melee" th:src="@{/images/melee.png}">
+                <img class="icon_middle" th:case="PISTOL" alt="pistol" th:src="@{/images/pistol.svg}">
+                <img class="icon_middle" th:case="SUBMACHINE_GUN" alt="submachine gun" th:src="@{/images/smg.png}">
+                <img class="icon_middle" th:case="ASSAULT_RIFLE" alt="assault rifle" th:src="@{/images/assault.png}">
+                <img class="icon_middle" th:case="LIGHT_MACHINE_GUN" alt="light machine gun"
+                     th:src="@{/images/minigun.png}">
+                <img class="icon_middle" th:case="SNIPER_RIFLE" alt="sniper rifle" th:src="@{/images/sniper.png}">
+                <img class="icon_middle" th:case="ALIEN" alt="alien" th:src="@{/images/alien.png}">
+                <img class="icon_middle" th:case="LAND" alt="sniper rifle" th:src="@{/images/land.png}">
+                <img class="icon_middle" th:case="AIR" alt="alien" th:src="@{/images/air.png}">
+            </div>
+            <div class="weapon-description">
+                <b>New transport</b>
+                <div class="form-item_small">
+                    <b>Name</b>
+                    <span th:text="${request.transport.name}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Description</b>
+                    <span th:text="${request.transport.description}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Access level</b>
+                    <span th:text="${request.transport.requiredAccessLvl}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Price</b>
+                    <span th:text="${request.transport.price}"></span>
+                </div>
+                <div class="form-item_small">
+                    <b>Quantity</b>
+                    <span th:text="${request.transport.quantity}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${request.transport == null}" class="form-item weapon-flex">
+            <div class="blank-weapon-icon"></div>
+            <b class="weapon-description"> New transport: none </b>
+        </div>
+
+        <div th:id="${'request-buttons-' + request.id}" class="form-item button-flex-row">
+            <a th:attr="data-request-id=${request.id}" data-action="accept" class="button approved">Accept</a>
+            <a th:attr="data-request-id=${request.id}" data-action="reject" class="button rejected">Reject</a>
+        </div>
+        <div th:id="${'request-flash-' + request.id}" class="flash hidden"></div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/managers/manager__equipment-change.js}"></script>
+</body>
+</html>

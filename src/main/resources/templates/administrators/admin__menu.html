@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/administrators/admin__menu.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="grid">
+    <div class="header">
+        <a th:href="@{/profile}" class="button button_profile">
+            Profile
+        </a>
+    </div>
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+    <a th:href="@{/admin/district}" class="flex-column district grid-button button">
+        District
+        <div class="notification-number" th:if="${ongoing_incidents > 0}" th:text="${ongoing_incidents}"></div>
+    </a>
+    <a th:href="@{/admin/experiments}" class="flex-column experiments-articles grid-button button">
+        Experiments & Articles
+        <div class="notification-number" th:if="${experiment_count > 0}" th:text="${experiment_count}"></div>
+    </a>
+    <a th:href="@{/admin/purchaseRequests}" class="flex-column clients-manufacturers grid-button button">
+        Purchase & sale requests
+        <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
+    </a>
+    <a th:href="@{/admin/employee}" class="flex-column employees grid-button button">Employees</a>
+    <a th:href="@{/admin/vacancies}" class="flex-column prawn-vacancies grid-button button">
+        Prawn vacancies
+        <div class="notification-number" th:if="${new_vac_count > 0}" th:text="${new_vac_count}"></div>
+    </a>
+    <a th:href="@{/admin/newWeapons}" class="flex-column new-weapons grid-button button">
+        New weapons and transport
+        <div class="notification-number" th:if="${new_prod_count > 0}" th:text="${new_prod_count}"></div>
+    </a>
+    <a th:href="@{/admin/prawns}" class="flex-column prawn-registration grid-button button">Prawn registration</a>
+    <a th:href="@{/admin/jobApplications}" class="flex-column prawn-job-applications grid-button button">
+        Prawns' job applications
+        <div class="notification-number" th:if="${vac_appl_count > 0}" th:text="${vac_appl_count}"></div>
+    </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/managers/manager__lists.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1>My prawns</h1>
+</div>
+
+<div class="content content_prawns">
+    <div class="form-item gray" th:if="${clients == null or clients.isEmpty()}">
+        There are no prawns registered to you...
+    </div>
+    <div th:each="client: ${clients}" class="content__item">
+        <div class="content__header finished">
+            <span th:text="${'Prawn #' + client.id + ' '}"></span>
+            <b th:text="${client.name}"></b>
+        </div>
+        <div class="content__main">
+            <div class="form-item_small">
+                <b>House </b>
+                <span th:text="${'(' + client.districtHouse.shelterRow + ' ; ' + client.districtHouse.shelterColumn + ')'}"></span>
+            </div>
+            <div th:if="${client.job}" class="form-item_small">
+                <b>Job </b>
+                <span th:text="${client.job.title}"></span>
+            </div>
+            <div class="form-item_small">
+                <b>Karma </b>
+                <span th:text="${client.karma}"></span>
+            </div>
+            <div class="form-item_small">
+                <b>Balance </b>
+                <span th:text="${client.balance}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+@import "../common.css";
+
+.grid {
+    display: grid;
+    grid: "header header" 80px "form district-grid";
+    row-gap: 10px;
+    padding: 5px 15px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.header {
+    grid-area: header;
+    margin-bottom: 20px;
+}
+
+.form {
+    word-break: break-word;
+    grid-area: form;
+    padding: 30px;
+}
+
+.district-grid {
+    grid-area: district-grid;
+    max-width: 500px;
+}
+
+.danger-circle {
+    border: 1px solid black;
+    border-radius: 90px;
+    margin-right: 15px;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+}
+
+.clickable-circle:hover {
+    stroke-width: 2px;
+    stroke: black;
+    cursor: pointer;
+}
+
+.clicked-circle {
+    stroke-width: 2px;
+    stroke: black;
+}
+
+.mobile-error {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20vh;
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 450px) {
+    .mobile-error {
+        display: block;
+    }
+
+    .grid {
+        display: none;
+    }
+}
+

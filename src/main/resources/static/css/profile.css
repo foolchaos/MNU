@@ -1,0 +1,76 @@
+@import "common.css";
+
+body {
+    margin: 0;
+}
+
+.content {
+    margin-top: 100px;
+}
+
+.profile {
+    text-align: left;
+    min-width: 350px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+h2 {
+    margin-top: 40px;
+}
+
+.stats-item {
+    display: flex;
+    justify-content: space-between;
+    line-height: 32px;
+}
+
+.content__item {
+    margin: 20px auto auto auto;
+    border: 2px solid black;
+    width: 350px
+}
+
+.content__main {
+    display: flex;
+    word-break: break-word;
+    text-align: center;
+    padding: 12px;
+    justify-content: space-between;
+}
+
+#change-email-button {
+    display: block;
+}
+
+@media (max-width: 450px) {
+    .profile {
+        max-width: 350px;
+    }
+
+    .content__item {
+        width: 330px;
+    }
+}
+
+@media (max-width: 380px) {
+    .profile {
+        max-width: 270px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .font-big {
+        font-size: 18px;
+    }
+
+    .content__item {
+        width: 250px;
+    }
+
+    .content__main {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,225 @@
+@import "flexes.css";
+
+body {
+    font-family: "Helvetica", sans-serif;
+    font-size: 17px;
+}
+
+.fixed-header {
+    padding: 12px 12px 20px 12px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: white;
+    border-bottom: 2px solid black;
+    z-index: 2;
+}
+
+.fixed-header_small {
+    padding: 6px 12px 6px 12px;
+}
+
+select {
+    background: white;
+    border-radius: 6px;
+}
+
+.input_big {
+    display: block;
+    font-size: 16px;
+    height: 25px;
+}
+
+.form-item {
+    margin-top: 20px;
+}
+
+.form-item_giant {
+    margin-top: 70px;
+}
+
+.form-item_big {
+    margin-top: 40px;
+}
+
+.form-item_small {
+    margin-top: 10px;
+}
+
+.form-item_micro {
+    margin-top: 5px;
+}
+
+.font-big {
+    font-size: 20px;
+}
+
+.font-huge {
+    font-size: 26px;
+}
+
+.gray {
+    color: #9e9e9e;
+}
+
+.notification-number {
+    position: absolute;
+    background: #ffd100;
+    border: 2px solid black;
+    border-radius: 100px;
+    padding: 2px 10px;
+    top: -8px;
+    right: -8px;
+    font-size: 24px;
+}
+
+.button {
+    color: black;
+    text-decoration: none;
+    border: 2px solid black;
+    border-radius: 6px;
+    padding: 8px 22px;
+    font-size: 20px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 5px #cacaca;
+    background: white;
+}
+
+.button:hover:not(.button_pressed) {
+    top: 2px;
+    box-shadow: 0 3px #cacaca;
+}
+
+.button:active:not(.button_pressed) {
+    top: 5px;
+    box-shadow: none;
+}
+
+.button_pressed {
+    top: 3px;
+    box-shadow: none;
+    outline: none;
+    background: lightgreen;
+    cursor: default;
+}
+
+.button_round {
+    padding: 9px;
+    border-radius: 100px;
+}
+
+.button_back {
+    width: 45px;
+    height: 45px;
+}
+
+.button_profile {
+    font-size: 18px;
+    margin: auto;
+    padding: 10px 15px;
+}
+
+.button_logout {
+    margin: auto 20px auto auto;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+.icon_b {
+    width: 55px;
+    height: 55px;
+}
+
+.icon_middle {
+    width: 70px;
+    height: 70px;
+}
+
+.icon_big {
+    width: 100px;
+    height: 100px;
+}
+
+.icon_giant {
+    width: 200px;
+    height: 200px;
+}
+
+.light-gray-bg {
+    background: #f6f6f6;
+}
+
+.pending {
+    background: #dcefff;
+}
+
+.selected-row {
+    background: #d6ffc5;
+}
+
+.approved {
+    background: #d6f5d5;
+}
+
+.finished {
+    background: #ececec;
+}
+
+.rejected {
+    background: #f2d6de;
+}
+
+.danger-level-3 {
+    background: red;
+}
+
+.danger-level-2 {
+    background: orange;
+}
+
+.danger-level-1 {
+    background: yellow;
+}
+
+.flash {
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.flash_small {
+    margin: auto;
+    width: 50%;
+}
+
+.flash_success {
+    background: #d6f5d5;
+}
+
+.flash_error {
+    background: #f2d6de;
+}
+
+.flash_royal {
+    width: 100%;
+}
+
+.last-item {
+    margin-bottom: 40px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.content__item:last-child {
+    margin-bottom: 40px;
+}
+
+.hidden {
+    display: none !important;
+}

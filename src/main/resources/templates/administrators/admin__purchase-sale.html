@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adm-man/adm-man__purchase-sale.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1>Purchase & sale requests</h1>
+</div>
+
+<div class="content">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+    <div class="form-item gray" th:if="${requests == null or requests.isEmpty()}">
+        No new requests
+    </div>
+
+    <div th:id="${'request-content-' + request.id}" th:each="request: ${requests}"
+         class="content__item flex-column finished">
+        <div th:each="item : ${request.cart.items}" class="form-item">
+            <div class="form-item_small">
+                <b th:text="${item.name()}"></b>
+            </div>
+            <div class="form-item_small">
+                <b>Price:</b>
+                <span th:text="${item.price() + ' c.u'}"></span>
+            </div>
+            <div class="form-item_small">
+                <b>Quantity:</b>
+                <span th:text="${item.quantity + ' pieces'}"></span>
+            </div>
+        </div>
+        <div class="form-item_small" th:switch="${request.user.role.name()}">
+            <div th:case="CUSTOMER">
+                <span>Purchase request from customer </span> <b th:text="${request.user.login}"></b>
+            </div>
+            <div th:case="PRAWN">
+                <span>Purchase request from prawn </span> <b th:text="${request.user.login}"></b>
+            </div>
+            <div th:case="MANUFACTURER">
+                <span>Sale request from manufacturer </span> <b th:text="${request.user.login}"></b>
+            </div>
+        </div>
+        <div th:id="${'request-buttons-' + request.id}" class="form-item button-flex-row">
+            <a th:attr="data-request-id=${request.id}" data-baseurl="/admin/acceptPurchaseRequest/" data-action="accept"
+               class="button approved">Accept</a>
+            <a th:attr="data-request-id=${request.id}" data-baseurl="/admin/rejectPurchaseRequest/" data-action="reject"
+               class="button rejected">Reject</a>
+        </div>
+        <div th:id="${'request-flash-' + request.id}" class="flash hidden"></div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/adm-man/adm-man__purchase-sale.js}"></script>
+</body>
+</html>

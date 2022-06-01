@@ -1,0 +1,26 @@
+@import "../common.css";
+
+.text-area_big {
+    min-height: 400px;
+}
+
+.input_big {
+    display: block;
+    font-size: 16px;
+    height: 30px;
+    width: 500px;
+}
+
+@media (max-width: 700px) {
+    body {
+        margin: 5px;
+    }
+
+    .input_big {
+        width: 80vw;
+    }
+
+    .text-area_big {
+        width: 80vw;
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/managers/manager__main.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="grid">
+    <div class="grid__header flex-row-left">
+        <a th:href="@{/profile}" class="flex-column button button_profile">
+            Profile
+        </a>
+        <a th:href="@{/man/clients}">
+            <img alt="Clients list" class="icon_b header__icon" th:src="@{/images/human_list_icon.png}">
+        </a>
+        <a th:href="@{/man/prawns}">
+            <img alt="Prawns list" class="icon_b header__icon" th:src="@{/images/alien_list_icon.png}">
+        </a>
+    </div>
+    <div class="managers-grid__buttons">
+        <a th:href="@{/man/purchaseRequests}" class="flex-column grid-button button">
+            Purchase requests
+            <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
+        </a>
+        <a th:href="@{/man/newWeapons}" class="flex-column grid-button button">
+            New weapons
+            <div class="notification-number" th:if="${new_weap_count > 0}" th:text="${new_weap_count}"></div>
+        </a>
+        <a th:href="@{/man/newEquipment}" class="flex-column grid-button button">
+            Equipment change
+            <div class="notification-number" th:if="${eq_change_count > 0}" th:text="${eq_change_count}"></div>
+        </a>
+        <a th:href="@{/man/jobApplications}" class="flex-column grid-button button">
+            Prawns' job applications
+            <div class="notification-number" th:if="${vac_appl_count > 0}" th:text="${vac_appl_count}"></div>
+        </a>
+        <a th:href="@{/man/registerPrawn}" class="flex-column grid-button button">
+            Prawns registrations
+        </a>
+    </div>
+</div>
+</body>
+</html>

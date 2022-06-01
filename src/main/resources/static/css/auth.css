@@ -1,0 +1,37 @@
+@import "common.css";
+
+
+.lower {
+    margin-top: 25vh;
+}
+
+.reg-lower {
+    margin-top: 20vh;
+}
+
+.login-page__back-link {
+    text-decoration: none;
+    margin-right: 160px;
+    color: blue;
+    cursor: pointer;
+}
+
+.login-page__back-link:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 350px) {
+    .input_big {
+        width: 75vw;
+        height: 40px;
+    }
+
+    .login-page__back-link {
+        margin-right: 55vw
+    }
+}
+
+
+
+

@@ -1,0 +1,92 @@
+@import "../common.css";
+@import "../mobile-burger.css";
+
+body {
+    margin: 0;
+}
+
+.grid-button {
+    margin: auto;
+    text-align: center;
+    width: 23vw;
+}
+
+.content {
+    text-align: center;
+    margin-top: 106px;
+}
+
+.content__item {
+    word-break: break-word;
+    width: 650px;
+    margin: 20px auto auto auto;
+    border: 2px solid black;
+}
+
+.weapon-flex {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.weapon-description {
+    width: 500px;
+}
+
+.button-flex-row {
+    display: flex;
+    justify-content: center;
+}
+
+.button-flex-row * {
+    margin: 0 15px;
+}
+
+.content__main {
+    padding: 12px;
+}
+
+h1 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button_back_dont-remove {
+    width: 45px;
+    height: 45px;
+}
+
+@media (max-width: 750px) {
+    .content__item {
+        width: 90vw;
+    }
+
+    .weapon-description {
+        width: 70vw;
+    }
+}
+
+@media (max-width: 700px) {
+    .grid-button {
+        margin-top: 25px;
+        margin-bottom: 25px;
+        width: 80vw;
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 450px) {
+    .weapon-flex {
+        flex-direction: column;
+    }
+
+    .button-flex-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-flex-row * {
+        margin-bottom: 7px;
+    }
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/administrators/admin__vacancies.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">New vacancy</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/admin/main}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <a th:href="@{/admin/main}" class="grid-button button button_back_mobile">Main menu</a>
+        <a th:href="@{/admin/vacancies}" class="grid-button button"> All vacancies</a>
+        <a th:href="@{/admin/vacancies/requests}" class="grid-button button">
+            Requests
+            <div class="notification-number" th:if="${new_vac_count > 0}" th:text="${new_vac_count}"></div>
+        </a>
+        <div class="grid-button button button_pressed"> New vacancy</div>
+    </div>
+</div>
+
+<div class="content flex-column">
+    <form action="#" th:action="@{/admin/addVacancy}" th:object="${form}" method="post"
+          class="content_form flex-column-left">
+        <label class="form-item_big">
+            <b>Title</b>
+            <input id="title" name="title" class="input_big" required>
+        </label>
+        <label class="form-item">
+            <b>Salary</b>
+            <input id="salary" name="salary" class="input_big" required type="number" min="0">
+        </label>
+        <label class="form-item">
+            <b>Required karma</b>
+            <input id="requiredKarma" name="requiredKarma" class="input_big" required type="number">
+        </label>
+        <label class="form-item">
+            <b>Working hours per week</b>
+            <input id="workHoursPerWeek" name="workHoursPerWeek" class="input_big" required type="number" min="1">
+        </label>
+        <label class="form-item">
+            <b>Vacant places</b>
+            <input id="vacantPlaces" name="vacantPlaces" class="input_big" required type="number" min="1">
+        </label>
+        <input type="submit" class="button submit" value="Suggest">
+    </form>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

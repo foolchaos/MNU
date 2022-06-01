@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/administrators/admin__experiments-articles.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">Articles</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/admin/main}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <a th:href="@{/admin/main}" class="grid-button button button_back_mobile">Main menu</a>
+        <a th:href="@{/admin/experiments}" class="grid-button button">
+            Experiments
+            <div class="notification-number" th:if="${experiment_count > 0}" th:text="${experiment_count}"></div>
+        </a>
+        <div class="grid-button button button_pressed"> Articles</div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-item gray" th:if="${articles == null or articles.isEmpty()}">
+        There are no articles
+    </div>
+    <div th:each="article : ${articles}" class="content__item">
+        <div class="content__header finished">
+            <div class="header-text">
+                <span th:text="${'Article #' + article.id + ' '}"></span> <b th:text="${article.title}"></b> <br>
+                <span th:text="${'Written by ' + article.scientist.employee.name + ' on '}"></span>
+                <span class="date-to-format" th:text="${article.creationDate}"> </span>
+            </div>
+        </div>
+        <div class="content__main content__main_article">
+            <div th:text="${article.text}"></div>
+            <div th:id="${'reward-message-' + article.scientist.id}"
+                 class="hidden form-item_small reward-message"></div>
+            <div th:id="${'reward-form-' + article.scientist.id}">
+                <input th:id="${'reward-input-' + article.scientist.id}" class="reward-input hidden input_big"
+                       type="number" min="0" placeholder="Reward">
+                <button th:attr="data-empId=${article.scientist.id}" data-action="reward"
+                        class="button approved form-item_small"> Give reward
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/administrators/admin__experiments-articles.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/formatDateTime.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

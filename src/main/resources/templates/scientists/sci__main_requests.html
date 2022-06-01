@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/scientists/sci__main.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div id="header" class="fixed-header">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div id="mobile-title" class="mobile-title">Requests</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/profile}" class="flex-column button button_profile">
+            Profile
+        </a>
+        <a th:href="@{/sci/main}" class="experiments-button grid-button button">
+            Experiments
+        </a>
+        <a th:href="@{/sci/main/articles}" class="grid-button button">
+            Articles
+        </a>
+        <div class="grid-button button button_pressed">
+            Requests
+        </div>
+        <a th:href="@{/sci/experiment}" class="add-button grid-button button">
+            Add Experiment
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="flex-column">
+        <div class="form-item_big gray" th:if="${experiments == null or experiments.isEmpty()}">
+            There are no experiment requests for you
+        </div>
+    </div>
+    <div th:each="exp: ${experiments}" class="content__item">
+        <div th:id="${'exp-header-' + exp.id}" class="content__header pending">
+                <span class="header-text">
+                    <span> Minor Exp. #</span><span th:text="${exp.id}"></span> <b><span th:text="${exp.title}"></span></b>
+                </span>
+        </div>
+        <div class="content__main">
+            <div th:id="${'exp-content-' + exp.id}" class="flex-column-left">
+                <b>Examinator</b>
+                <div th:text="${exp.examinator.employee.name}"></div>
+                <div th:if="${exp.assistant}">
+                    <b class="form-item_micro">Assistant</b>
+                    <div th:text="${exp.assistant.employee.name}"></div>
+                </div>
+                <b class="form-item_micro">Submitted on </b>
+                <div class="datetime-to-format" th:text="${exp.statusDate}"></div>
+                <b class="form-item_micro">Description</b>
+                <div th:text="${exp.description}"></div>
+            </div>
+            <div class="flex-row-center">
+                <a th:attr="data-exp-id=${exp.id}" data-action="accept" class="button approved button_row">Accept</a>
+                <a th:attr="data-exp-id=${exp.id}" data-action="reject" class="button rejected button_row">Reject</a>
+            </div>
+        </div>
+        <div th:id="${'exp-flash-' + exp.id}" class="flash hidden">
+            <div th:id="${'exp-flash-message-' + exp.id}"></div>
+            <button th:id="${'exp-undo-' + exp.id}" th:attr="data-exp-id=${exp.id}" data-action="undo"
+                    class="form-item button">Undo 10
+            </button>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/scientists/sci__main.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/formatDateTime.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

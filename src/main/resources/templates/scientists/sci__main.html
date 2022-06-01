@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/scientists/sci__main.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">Experiments</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/profile}" class="flex-column button button_profile">
+            Profile
+        </a>
+        <div class="experiments-button grid-button button button_pressed">
+            Experiments
+        </div>
+        <a th:href="@{/sci/main/articles}" class="grid-button button">
+            Articles
+        </a>
+        <a th:href="@{/sci/main/requests}" class="grid-button button">
+            Requests
+            <div class="notification-number" th:if="${experimentCount > 0}" th:text="${experimentCount}"></div>
+        </a>
+        <a th:href="@{/sci/experiment}" class="add-button grid-button button">
+            Add Experiment
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div class="flex-column">
+        <div class="form-item_big gray" th:if="${experiments == null or experiments.isEmpty()}">
+            You didn't submit any experiments
+        </div>
+    </div>
+    <div th:each="exp: ${experiments}" class=" content__item">
+        <div class="content__header"
+             th:classappend="|${exp.status.name()=='PENDING' ? 'pending' : exp.status.name()=='APPROVED' ? 'approved' : exp.status.name()=='REJECTED' ? 'rejected' : 'finished'}|">
+            <div th:switch="${exp.status.name()}">
+                <img th:case="PENDING" class="content-icon" alt="pending" th:src="@{/images/clock.png}">
+                <img th:case="APPROVED" class="content-icon" alt="approved" th:src="@{/images/pencil.png}">
+                <img th:case="REJECTED" class="content-icon" alt="rejected" th:src="@{/images/x_mark.png}">
+                <img th:case="FINISHED" class="content-icon" alt="finished" th:src="@{/images/tick.png}">
+            </div>
+            <span class="header-text">
+                    <span th:text="${exp.type.name()} == 'MAJOR' ? 'Major' : 'Minor'"></span> Exp. #<span
+                    th:text="${exp.id}"></span> <b><span th:text="${exp.title}"></span></b>
+                </span>
+        </div>
+        <div class="content__main" th:switch="${exp.status.name()}">
+            <div class="flex-column-left">
+                <div th:if="${exp.assistant}">
+                    <b class="form-item_micro">Assistant</b>
+                    <div th:text="${exp.assistant.employee.name}"></div>
+                </div>
+                <div class="form-item_micro" th:case="PENDING">
+                    <b>Submitted on </b>
+                </div>
+                <div class="form-item_micro" th:case="APPROVED">
+                    <b>Approved on </b>
+                </div>
+                <div class="form-item_micro" th:case="REJECTED">
+                    <b> Rejected on </b>
+                </div>
+                <div class="form-item_micro" th:case="FINISHED">
+                    <b> Finished on </b>
+                </div>
+                <div class="datetime-to-format" th:text="${exp.statusDate}"></div>
+                <b class="form-item_micro">Description</b>
+                <div th:text="${exp.description}"></div>
+                <div th:if="${exp.status.name() == 'FINISHED'}" class="flex-column-left">
+                    <b class="form-item_micro"> Report </b>
+                    <div th:text="${exp.result}"></div>
+                </div>
+            </div>
+            <div class="flex-column">
+                <a th:if="${exp.status.name()=='APPROVED'}" th:href="@{'/sci/report?id=' + ${exp.id}}"
+                   th:attr="data-exp-id=${exp.id}" class="button form-item_small">Write report</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/scientists/sci__main.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/formatDateTime.js}"></script>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

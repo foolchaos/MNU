@@ -1,0 +1,42 @@
+@import "../common.css";
+
+body {
+    margin: 0;
+}
+
+.content {
+    text-align: center;
+}
+
+.content_prawns {
+    text-align: left;
+}
+
+.content__item {
+    word-break: break-word;
+    width: 400px;
+    margin: 20px auto auto auto;
+    border: 2px solid black;
+}
+
+.content__main {
+    padding: 12px;
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+}
+
+.content__header {
+    text-align: center;
+    padding: 12px 12px 10px;
+    border-bottom: 2px solid;
+}
+
+@media (max-width: 500px) {
+    .content__item {
+        width: 80vw;
+    }
+}

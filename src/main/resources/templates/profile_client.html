@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/profile.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small flex-row">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <a th:href="@{/auth/logout}" class="button button_logout">
+        Logout
+    </a>
+</div>
+
+<div class="content flex-column">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+    <div class="profile">
+        <h1 class="form-item_micro" th:text="${user.name}"></h1>
+        <div class="stats-item form-item font-big">
+            <div>Email</div>
+            <b th:text="${user.email}"></b>
+        </div>
+        <h2>Security</h2>
+        <button id="change-email-button" class="button form-item">Change email</button>
+        <form action="#" th:action="@{/changeEmail}" th:object="${form_email}" method="post"
+              class="flex-column-left hidden" id="change-email-form">
+            <label class="form-item">
+                <b>New Email</b>
+                <input th:field="*{newEmail}" required type="email" class="input_big">
+            </label>
+            <input type="submit" class="button form-item" value="Change email">
+        </form>
+
+        <button id="change-password-button" class="button form-item_big">Change password</button>
+        <form action="#" th:action="@{/changePass}" th:object="${form_password}" method="post"
+              class="flex-column-left form-item_big hidden" id="change-password-form">
+            <label>
+                <b>Old password</b>
+                <input th:field="*{prevPass}" required type="password" class="input_big">
+            </label>
+            <label class="form-item">
+                <b>New Password</b>
+                <input th:field="*{newPass}" required type="password" class="input_big">
+            </label>
+            <input type="submit" class="button form-item" value="Change password">
+        </form>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/profile_client.js}"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+@import url("common.css");
+@import url("mobile-burger.css");
+
+body {
+    margin: 0;
+}
+
+.grid {
+    margin-top: 64px;
+    display: grid;
+    grid: "departments search-bar" 60px "departments catalogue";
+    grid-template-columns: 1.5fr 8.5fr;
+}
+
+.grid__search-bar {
+    padding: 0 20px;
+    grid-area: search-bar;
+}
+
+.search-bar-input {
+    padding: 0 10px;
+    height: 35px;
+    width: 30vw;
+    border: 2px solid black;
+    border-radius: 10px 0 0 10px;
+    display: inline;
+    font-size: 18px;
+}
+
+.search-bar-button {
+    border-radius: 0 10px 10px 0;
+    padding: 3px 15px;
+    margin-left: 5px;
+}
+
+.mobile-footer {
+    background: white;
+    display: none;
+    border-top: 2px solid black;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.grid__departments {
+    padding: 25px 0;
+    grid-area: departments;
+    position: sticky;
+    top: 100px;
+    align-self: flex-start;
+    text-align: center;
+}
+
+.shop-icon {
+    cursor: pointer;
+    margin: 0 20px
+}
+
+.shop-icon:hover {
+    transform: scale(1.15);
+}
+
+.grid__catalogue {
+    grid-area: catalogue;
+}
+
+#header_mobile {
+    background: white;
+    grid-area: mobile-header;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 2px 10px;
+}
+
+.shop-item {
+    background-size: cover;
+    display: inline-flex;
+    width: 220px;
+    min-height: 220px;
+    border: 2px solid black;
+    border-radius: 30px;
+    text-align: center;
+    padding: 12px;
+    word-break: break-word;
+    margin: 20px;
+    float: left;
+}
+
+.shop-item_assault {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/assault.png");
+}
+
+.shop-item_pistol {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/pistol.svg");
+}
+
+.shop-item_melee {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/melee.png");
+}
+
+.shop-item_smg {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/smg.png");
+}
+
+.shop-item_lmg {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/minigun.png");
+}
+
+.shop-item_sniper {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/sniper.png");
+}
+
+.shop-item_alien {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/alien.png");
+}
+
+.shop-item_land {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/land.png");
+}
+
+.shop-item_air {
+    background-image: linear-gradient(to bottom, rgba(246, 246, 246, 0.94), rgba(246, 246, 246, 0.94)), url("../images/air.png");
+}
+
+.department-button {
+    padding: 15px;
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+    color: black;
+    display: block;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.department-button:first-child {
+    border-top: 2px solid black;
+}
+
+.department-button:hover {
+    background: #b9e9ff;
+}
+
+.chosen-department {
+    background: #b9e9ff;
+}
+
+.mobile-show {
+    display: none;
+}
+
+.margin-left {
+    margin-left: 20px;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid: "mobile-header" "search-bar" "catalogue";
+        grid-template-columns: 100%;
+        grid-column-gap: 0;
+        padding: 0;
+    }
+
+    .desktop-header {
+        display: none;
+    }
+
+    .mobile-footer {
+        display: flex;
+    }
+
+    .grid__departments {
+        border: none;
+        grid-area: mobile-header;
+    }
+
+    .search-bar-input {
+        width: 30vw;
+    }
+
+    .shop-icon {
+        margin: 0;
+    }
+
+    .header-mobile-border {
+        border-bottom: 2px solid black;
+    }
+
+    .mobile-show {
+        display: flex;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+}
+
+@media (max-width: 460px) {
+    .grid__search-bar {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-bar-sorter {
+        margin-top: 10px;
+    }
+
+    .search-bar-input {
+        width: 40vw;
+    }
+}

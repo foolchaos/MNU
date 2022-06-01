@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/security/sec__equipment-change.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-left">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+</div>
+<div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+<div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+<div class="flex-row-center">
+    <div th:if="${current_security.weapon != null}" class="equipment-item"
+         th:classappend="|${current_security.weapon.type.name()=='MELEE' ? 'equipment-item_melee' : current_security.weapon.type.name()=='PISTOL' ? 'equipment-item_pistol' :
+              current_security.weapon.type.name()=='SUBMACHINE_GUN' ? 'equipment-item_smg' : current_security.weapon.type.name()=='ASSAULT_RIFLE' ? 'equipment-item_assault' :
+              current_security.weapon.type.name()=='LIGHT_MACHINE_GUN' ? 'equipment-item_lmg' : current_security.weapon.type.name()=='SNIPER_RIFLE' ? 'equipment-item_sniper' :
+              current_security.weapon.type.name()=='ALIEN' ? 'equipment-item_alien' : ''}|">
+        <div class="flex-column-no-center">
+            <b class="approved-name font-big" th:text="${current_security.weapon.name}"></b>
+            <div class="equipment-item-main">
+                <div th:text="${current_security.weapon.description}"></div>
+                <div class="form-item_small"
+                     th:text="${'Access level: ' + current_security.weapon.requiredAccessLvl}"></div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${current_security.transport != null}" class="equipment-item"
+         th:classappend="|${current_security.transport.type.name()=='LAND' ? 'equipment-item_land' :
+              current_security.transport.type.name()=='AIR' ? 'equipment-item_air' : ''}|">
+        <div class="flex-column-no-center">
+            <b class="approved-name font-big" th:text="${current_security.transport.name}"></b>
+            <div class="equipment-item-main">
+                <div th:text="${current_security.transport.description}"></div>
+                <div class="form-item_small"
+                     th:text="${'Access level: ' + current_security.transport.requiredAccessLvl}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex-row-center" th:if="${current_request.employee != null}">
+    <div class="equipment-item" th:if="${current_request.weapon != null}"
+         th:classappend="|${current_request.weapon.type.name()=='MELEE' ? 'equipment-item_melee' : current_request.weapon.type.name()=='PISTOL' ? 'equipment-item_pistol' :
+              current_request.weapon.type.name()=='SUBMACHINE_GUN' ? 'equipment-item_smg' : current_request.weapon.type.name()=='ASSAULT_RIFLE' ? 'equipment-item_assault' :
+              current_request.weapon.type.name()=='LIGHT_MACHINE_GUN' ? 'equipment-item_lmg' : current_request.weapon.type.name()=='SNIPER_RIFLE' ? 'equipment-item_sniper' :
+              current_request.weapon.type.name()=='ALIEN' ? 'equipment-item_alien' : ''}|">
+        <div class="flex-column-no-center">
+            <b class="pending-name font-big" th:text="${current_request.weapon.name}"></b>
+            <div class="equipment-item-main">
+                <div th:text="${current_request.weapon.description}"></div>
+                <div class="form-item_small"
+                     th:text="${'Access level: ' + current_request.weapon.requiredAccessLvl}"></div>
+            </div>
+        </div>
+    </div>
+    <div class="equipment-item" th:if="${current_request.transport != null}"
+         th:classappend="|${current_request.transport.type.name()=='LAND' ? 'equipment-item_land' :
+              current_request.transport.type.name()=='AIR' ? 'equipment-item_air' : ''}|">
+        <div class="flex-column-no-center">
+            <b class="pending-name font-big" th:text="${current_request.transport.name}"></b>
+            <div class="equipment-item-main">
+                <div th:text="${current_request.transport.description}"></div>
+                <div class="form-item_small"
+                     th:text="${'Access level: ' + current_request.transport.requiredAccessLvl}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form th:if="${current_request.employee != null}" class="flex-row-center" method="post" action="#"
+      th:action="@{/sec/withdrawChange}">
+    <input type="submit" class="button rejected" value="Withdraw request">
+</form>
+
+<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="equipment-switch" checked>
+    <label class="onoffswitch-label" for="equipment-switch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
+<table>
+    <thead>
+    <tr>
+        <td> Id</td>
+        <td> Type</td>
+        <td> Name</td>
+        <td> Description</td>
+        <td> Access lvl</td>
+    </tr>
+    </thead>
+    <tbody id="weapons-tbody">
+    <tr class="weapon-row" th:each="weapon : ${available_weapons}" th:attr="data-id=${weapon.id}"
+        th:classappend="${current_security.weapon.id == weapon.id ? 'selected-row' : ''}">
+        <td th:text="${weapon.id}"></td>
+        <td th:text="|${weapon.type.name()=='MELEE' ? 'Melee' : weapon.type.name()=='PISTOL' ? 'Pistol' :
+              weapon.type.name()=='SUBMACHINE_GUN' ? 'Submachine gun' : weapon.type.name()=='ASSAULT_RIFLE' ? 'Assault rifle' :
+              weapon.type.name()=='LIGHT_MACHINE_GUN' ? 'Light machine gun' : weapon.type.name()=='SNIPER_RIFLE' ? 'Sniper rifle' :
+              weapon.type.name()=='ALIEN' ? 'Alien' : ''}|"></td>
+        <td th:text="${weapon.name}"></td>
+        <td th:text="${weapon.description}"></td>
+        <td th:text="${weapon.requiredAccessLvl}"></td>
+    </tr>
+    </tbody>
+    <tbody id="transport-tbody">
+    <tr class="transport-row hidden" th:each="transport : ${available_transport}" th:attr="data-id=${weapon.id}"
+        th:classappend="${current_security.transport.id == transport.id ? 'selected-row' : ''}">
+        <td th:text="${transport.id}"></td>
+        <td th:text="|${transport.type.name()=='LAND' ? 'Land transport' :
+         transport.type.name()=='AIR' ? 'Air transport' : ''}|"></td>
+        <td th:text="${transport.name}"></td>
+        <td th:text="${transport.description}"></td>
+        <td th:text="${transport.requiredAccessLvl}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<form class="flex-column form-item_big" method="post" th:object="${form}" action="#" th:action="@{/sec/equipment}">
+    <label>
+        <b>New weapon Id</b>
+        <input id="weaponId" name="weaponId" type="number" class="input_big"
+               th:value="${current_security.weapon != null ? current_security.weapon.id : ''}"
+               th:placeholder=" ${current_security.weapon !=null ? 'Current weapon id: ' + current_security.weapon.id : ''}">
+    </label>
+    <label class="form-item">
+        <b>New transport Id</b>
+        <input id="transportId" name="transportId" type="number" class="input_big"
+               th:value="${current_security.transport != null ? current_security.transport.id : ''}"
+               th:placeholder=" ${current_security.transport !=null ? 'Current transport id: ' + current_security.transport.id : ''}">
+    </label>
+    <input type="submit" class="last-item button form-item" value="Request new equipment">
+</form>
+<script rel="script" type="text/javascript" th:src="@{/js/security/sec__equipment-change.js}"></script>
+</body>
+</html>

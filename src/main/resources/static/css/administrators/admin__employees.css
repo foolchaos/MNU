@@ -1,0 +1,69 @@
+@import "../common.css";
+
+.grid {
+    display: grid;
+    grid: "header" 90px "table" "inputs";
+    row-gap: 10px;
+}
+
+.grid__table {
+    grid-area: table;
+    min-height: 200px;
+    max-height: 350px;
+    overflow-y: scroll;
+}
+
+.grid__table table {
+    border-collapse: collapse;
+}
+
+.grid__table td {
+    padding: 3px 6px;
+    border: 1px solid black;
+}
+
+.grid__inputs {
+    grid-area: inputs;
+}
+
+.grid__buttons {
+    grid-area: inputs;
+    align-items: flex-start;
+}
+
+.grid__buttons * {
+    margin: 15px;
+}
+
+.header {
+    grid-area: header;
+    margin-top: 5px;
+}
+
+#employees-tbody {
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid: "header" 90px "table" "buttons" "inputs";
+        grid-row-gap: 0;
+    }
+
+    .flex-column-top {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .grid__buttons {
+        grid-area: buttons;
+    }
+
+    .grid__buttons * {
+        margin: 10px 3vw;
+    }
+
+    .grid__table {
+        font-size: 14px;
+    }
+}

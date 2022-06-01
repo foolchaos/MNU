@@ -1,0 +1,54 @@
+@import "../common.css";
+
+body {
+    margin: 0;
+}
+
+.content {
+    text-align: center;
+    margin-top: 106px;
+}
+
+.content__item {
+    word-break: break-word;
+    width: 650px;
+    margin: 20px auto auto auto;
+    border: 2px solid black;
+    padding: 12px;
+}
+
+h1 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button-flex-row {
+    display: flex;
+    justify-content: center;
+}
+
+.button-flex-row * {
+    margin: 0 15px;
+}
+
+@media (max-width: 750px) {
+    .content__item {
+        width: 90vw;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 450px) {
+    .button-flex-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-flex-row * {
+        margin-bottom: 7px;
+    }
+}

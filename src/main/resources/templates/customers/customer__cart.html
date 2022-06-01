@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/cart.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1>Cart</h1>
+</div>
+
+<div class="content">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+    <div class="form-item gray" th:if="${items == null or items.isEmpty()}">
+        There is nothing in cart
+    </div>
+    <div th:each="item: ${items}" class="content__item finished">
+        <div class="form-item_small">
+            <b th:text="${item.name()}"></b>
+        </div>
+        <div class="form-item_small">
+            <b>Price:</b>
+            <span th:text="${item.price() + ' c.u'}"></span>
+        </div>
+        <form th:action="@{cart/updateQuantity}" method="post" class="form-item_small flex-column">
+            <b>Quantity</b>
+            <input type="hidden" name="itemId" th:value="${item.id}">
+            <input type="number" name="newQuantity" th:value="${item.quantity}" class="input_big form-item_small">
+            <input type="submit" class="button form-item" value="Update quantity">
+        </form>
+    </div>
+    <form th:if="${items != null and !items.isEmpty()}" th:action="@{/client/cart/sendRequest}" method="post"
+          class="form-item last-item">
+        <input type="submit" class="button" value="Send purchase request">
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+
+.mobile-buttons-row {
+    display: flex;
+    justify-content: center;
+}
+
+.mobile-title {
+    margin-left: 30px;
+    font-size: 20px;
+}
+
+.burger {
+    cursor: pointer;
+}
+
+#header_mobile {
+    display: none;
+}
+
+.button_back_mobile {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    #header_mobile {
+        display: flex;
+    }
+
+    #mobile-menu {
+        display: none;
+    }
+
+    .mobile-buttons-row {
+        flex-direction: column;
+    }
+
+    .button_back {
+        display: none;
+    }
+
+    .button_back_mobile {
+        display: block;
+    }
+}

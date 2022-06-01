@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/managers/manager__lists.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1>My clients</h1>
+</div>
+
+<div class="content">
+    <div class="form-item gray" th:if="${clients == null or clients.isEmpty()}">
+        You don't have any clients...
+    </div>
+    <div th:each="client: ${clients}" class="content__item content__main finished">
+        <div th:text="${'Customer #' + client.id + ' ' + client.name}"></div>
+        <div> Email <b th:text="${client.email}"></b></div>
+    </div>
+</div>
+</body>
+</html>

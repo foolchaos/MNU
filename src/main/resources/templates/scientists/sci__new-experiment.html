@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/scientists/sci__new-experiment.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+<div class="grid">
+    <div class="flex-row-left header">
+        <a th:href="@{/sci/main}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+    </div>
+
+    <form id="form" action="#" th:action="@{/sci/experiment}" th:object="${form}" method="post"
+          class="grid__inputs-top flex-column">
+        <label class="form-item">
+            <b>Title</b>
+            <input required th:field="*{title}" class="input_big">
+        </label>
+        <label class="form-item">
+            <b>Type</b>
+            <select th:field="*{type}" class="input_big">
+                <option th:value="minor">Minor</option>
+                <option th:value="major">Major</option>
+            </select>
+        </label>
+    </form>
+    <div class="flex-column grid__inputs-bottom">
+        <label class="form-item">
+            <b>Assistant id</b>
+            <input form="form" id="assistantId" name="assistantId" class="input_big">
+        </label>
+        <label class="form-item">
+            <b>Description</b>
+            <textarea form="form" th:required="true" id="description" name="description"
+                      class="text-area_big input_big"></textarea>
+        </label>
+        <input form="form" type="submit" class="button form-item" value="Submit Experiment">
+    </div>
+
+    <div class="grid__assistants-table">
+        <table>
+            <thead>
+            <tr>
+                <td> Id</td>
+                <td> Name</td>
+                <td> Position</td>
+                <td> Level</td>
+            </tr>
+            </thead>
+            <tbody id="assistants-tbody">
+            <tr th:each="assistant : ${assistants}" th:attr="data-id=${assistant.id}">
+                <td th:text="${assistant.id}"></td>
+                <td th:text="${assistant.name}"></td>
+                <td th:text="${assistant.position}"></td>
+                <td th:text="${assistant.level}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/scientists/sci__new-experiment.js}"></script>
+</body>
+</html>

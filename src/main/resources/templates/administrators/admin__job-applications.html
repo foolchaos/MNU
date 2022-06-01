@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/adm-man/adm-man__job-applications.css}">
+    <title>MNU</title>
+</head>
+<body data-role="admin">
+<div class="flex-row-center fixed-header fixed-header_small">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h2>Prawns' job application requests</h2>
+</div>
+
+<div class="content flex-column">
+    <div class="form-item gray" th:if="${requests == null or requests.isEmpty()}">
+        There are no new requests
+    </div>
+    <div th:each="request: ${requests}" th:id="${'request-content-' + request.id}" class="content__item finished">
+        <div class="form-item_small">
+            <b>Job</b>
+            <span th:text="${request.vacancy.title}"></span>
+        </div>
+        <div class="form-item_small">
+            <b>Prawn's name</b>
+            <span th:text="${request.prawn.name}"></span>
+        </div>
+        <div class="form-item_small">
+            <b>Required karma</b>
+            <span th:text="${request.vacancy.requiredKarma}"></span>
+        </div>
+        <div class="form-item_small">
+            <b>Prawn's karma</b>
+            <span th:text="${request.prawn.karma}"></span>
+        </div>
+        <div class="form-item_small">
+            <b>Salary</b>
+            <span th:text="${request.vacancy.salary}"></span>
+        </div>
+        <div th:id="${'request-buttons-' + request.id}" class="form-item button-flex-row">
+            <a th:attr="data-request-id=${request.id}" data-action="accept" class="button approved">Accept</a>
+            <a th:attr="data-request-id=${request.id}" data-action="reject" class="button rejected">Reject</a>
+        </div>
+        <div th:id="${'request-flash-' + request.id}" class="flash hidden"></div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/adm-man/adm-man__job-applications.js}"></script>
+</body>
+</html>

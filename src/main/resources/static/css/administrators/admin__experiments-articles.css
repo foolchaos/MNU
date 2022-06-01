@@ -1,0 +1,107 @@
+@import "../common.css";
+@import "../mobile-burger.css";
+
+body {
+    margin: 0;
+}
+
+.grid-button {
+    margin: auto;
+    text-align: center;
+    width: 20vw;
+}
+
+.content {
+    text-align: center;
+    margin-top: 104px;
+}
+
+.content__item {
+    margin: 20px auto auto auto;
+    border: 2px solid black;
+    width: 70%;
+}
+
+.content__header {
+    padding: 12px 12px 10px;
+    border-bottom: 2px solid;
+    display: flex;
+}
+
+.header-text {
+    width: 100%;
+    line-height: 22px;
+}
+
+.button-flex-row {
+    display: flex;
+    justify-content: center;
+}
+
+.button-flex-row * {
+    margin: 0 15px;
+}
+
+.content__main {
+    word-break: break-word;
+    text-align: left;
+    padding: 12px;
+}
+
+.content__main_article {
+    text-align: center;
+}
+
+.content-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.reward-input {
+    margin: 20px auto 10px auto;
+}
+
+.reward-message {
+    padding: 12px;
+}
+
+@media (max-width: 1000px) {
+    .grid-button {
+        width: 25vw;
+        padding: 10px 15px;
+    }
+
+    .content__item {
+        width: 80%
+    }
+}
+
+@media (max-width: 700px) {
+    .flex-row-left {
+        align-items: center;
+    }
+
+    .content {
+        margin-top: 84px;
+    }
+
+    .flex-row {
+        flex-direction: column;
+    }
+
+    .content__item {
+        width: 92%
+    }
+
+    .grid-button {
+        width: 80vw;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 22px;
+    }
+
+    .button-flex-row * {
+        font-size: 18px;
+        margin: 0 6px;
+    }
+}

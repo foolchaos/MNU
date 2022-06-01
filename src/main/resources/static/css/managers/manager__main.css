@@ -1,0 +1,38 @@
+@import "../common.css";
+
+.grid {
+    display: grid;
+    grid: "header" 75px "buttons";
+}
+
+.grid__header {
+    grid-area: header;
+}
+
+.header__icon {
+    margin-left: 30px;
+}
+
+.button_profile {
+    margin: 0;
+    width: 65px;
+    height: 25px;
+}
+
+.grid-button {
+    margin: 25px auto auto auto;
+    height: 50px;
+    text-align: center;
+    font-size: 22px;
+    width: 220px;
+}
+
+.grid__buttons {
+    grid-area: buttons;
+}
+
+@media (max-width: 300px) {
+    .grid-button {
+        width: 75vw;
+    }
+}

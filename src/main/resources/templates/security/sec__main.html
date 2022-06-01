@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/security/sec__main.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header flex-row-between">
+    <a th:href="@{/profile}" class="button button_profile">
+        Profile
+    </a>
+    <a th:href="@{/sec/equipment}" class="change-button button">
+        Change equipment
+    </a>
+</div>
+
+<div class="content">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+    <div class="flex-column form-item_big gray"
+         th:if="${(ongoing_incidents == null or ongoing_incidents.isEmpty()) and (incidents_with_employee == null or incidents_with_employee.isEmpty())}">
+        No records of incidents are available
+    </div>
+
+    <div th:each="inc: ${ongoing_incidents}" class=" content__item">
+        <div class="content__header"
+             th:classappend="|${inc.dangerLevel==3 ? 'danger-level-3' : inc.dangerLevel==2 ? 'danger-level-2' : inc.dangerLevel==1 ? 'danger-level-1' : ''}|">
+        </div>
+        <div class="content__main">
+            <div class="flex-column-left">
+                <b th:text="${'Danger level ' + inc.dangerLevel}"></b>
+                <div class="form-item_micro">
+                    <b>Description</b>
+                    <div th:text="${inc.description}"></div>
+                </div>
+                <div class="form-item_micro">
+                    <b>House</b>
+                    <div th:text="${'(' + inc.house.shelterColumn + ' ; ' + inc.house.shelterRow + ')'}"></div>
+                </div>
+                <div class="form-item_micro">
+                    <b>Date of appearance</b>
+                    <div class="datetime-to-format" th:text="${inc.appearanceTime}"></div>
+                </div>
+                <div class="form-item_small" th:text="${'Available places: ' + inc.availablePlaces}"></div>
+                <div class="form-item_micro"
+                     th:text="${'Level varies from ' + inc.levelFrom + ' to ' + inc.levelTo}"></div>
+            </div>
+            <form action="#" th:action="@{'/sec/incident/'} + ${inc.id}" class="flex-column form-item_small"
+                  method="post">
+                <input type="submit" class="button approved" value="Apply">
+            </form>
+        </div>
+    </div>
+
+    <div th:each="inc: ${incidents_with_employee}" class=" content__item">
+        <div class="content__header"
+             th:classappend="|${inc.dangerLevel==0 ? 'finished' : inc.availablePlaces==0 ? 'approved' : 'pending'}|">
+        </div>
+        <div class="content__main">
+            <div class="flex-column-left">
+                <b th:if="${inc.dangerLevel > 0}" th:text="${'Danger level ' + inc.dangerLevel}"></b>
+                <div class="form-item_micro">
+                    <b>Description</b>
+                    <div class="description" th:text="${inc.description}"></div>
+                </div>
+                <div class="form-item_micro">
+                    <b>House</b>
+                    <div th:text="${'(' + inc.house.shelterColumn + ' ; ' + inc.house.shelterRow + ')'}"></div>
+                </div>
+                <div class="form-item_micro">
+                    <b>Date of appearance</b>
+                    <div class="datetime-to-format" th:text="${inc.appearanceTime}"></div>
+                </div>
+                <div class="form-item_small" th:if="${inc.availablePlaces > 0}"
+                     th:text="${'Available places: ' + inc.availablePlaces}"></div>
+                <div class="form-item_micro" th:if="${inc.availablePlaces > 0}"
+                     th:text="${'Level varies from ' + inc.levelFrom + ' to ' + inc.levelTo}"></div>
+            </div>
+            <form th:if="${inc.availablePlaces > 0}" class="flex-column form-item_small" action="#"
+                  th:action="@{/sec/withdrawParticipation}" method="post">
+                <input type="submit" class="button rejected" value="Withdraw">
+            </form>
+            <div class="flex-column form-item_small" th:if="${inc.availablePlaces==0 and inc.dangerLevel > 0}">
+                <a th:href="@{'/sec/report?id='} + ${inc.id}" class="button">Write report</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/formatDateTime.js}"></script>
+</body>
+</html>

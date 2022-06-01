@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-left">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+</div>
+<div th:if="${status}" th:text="${status}" class="form-item_small flash flash_success"></div>
+<div th:if="${error}" th:text="${error}" class="form-item_small flash flash_error"></div>
+<form action="#" th:action="@{/man/registerPrawn}" th:object="${form}" method="post"
+      class="flex-column form-item_giant">
+    <b>Prawn registration</b>
+    <label class="form-item_big">
+        <b>Name</b>
+        <input required th:field="*{name}" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Login</b>
+        <input required th:field="*{username}" class="input_big">
+    </label>
+    <label class="form-item">
+        <b>Password</b>
+        <input required th:field="*{password}" type="password" class="input_big">
+    </label>
+    <input type="submit" class="form-item button" value="Register">
+</form>
+</body>
+</html>
