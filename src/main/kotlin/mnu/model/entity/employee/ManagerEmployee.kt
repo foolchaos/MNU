@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "managers")
-class ManagerEmployee : BaseEntity<Long>() {
+class ManagerEmployee : BaseEntity<Long>(), java.io.Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     var employee: Employee? = null
 
