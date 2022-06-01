@@ -1,8 +1,8 @@
 package mnu.repository
 
-import mnu.model.Client
-import mnu.model.ClientType
-import mnu.model.employee.ManagerEmployee
+import mnu.model.entity.Client
+import mnu.model.entity.ClientType
+import mnu.model.entity.employee.ManagerEmployee
 import org.springframework.stereotype.Repository
 
 

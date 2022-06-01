@@ -1,6 +1,6 @@
 package mnu.service
 
-import mnu.model.employee.Employee
+import mnu.model.entity.employee.Employee
 
 interface EmployeeService {
     fun findAll(): List<Employee>

@@ -1,10 +1,10 @@
 package mnu.repository.shop
 
-import mnu.model.Transport
-import mnu.model.Weapon
-import mnu.model.shop.ShoppingCart
-import mnu.model.shop.ShoppingCartItem
-import mnu.model.shop.ShoppingCartStatus
+import mnu.model.entity.Transport
+import mnu.model.entity.Weapon
+import mnu.model.entity.shop.ShoppingCart
+import mnu.model.entity.shop.ShoppingCartItem
+import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.repository.BaseRepository
 import org.springframework.stereotype.Repository
 

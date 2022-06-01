@@ -1,4 +1,4 @@
-package mnu.model
+package mnu.model.entity
 
 import java.time.LocalDateTime
 import javax.persistence.*

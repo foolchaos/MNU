@@ -1,8 +1,8 @@
 package mnu.repository
 
 //import mnu.model.ExperimentType
-import mnu.model.Experiment
-import mnu.model.employee.ScientistEmployee
+import mnu.model.entity.Experiment
+import mnu.model.entity.employee.ScientistEmployee
 import org.springframework.stereotype.Repository
 
 @Repository

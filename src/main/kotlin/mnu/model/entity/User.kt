@@ -1,4 +1,4 @@
-package mnu.model
+package mnu.model.entity
 
 import javax.persistence.Column
 import javax.persistence.Entity

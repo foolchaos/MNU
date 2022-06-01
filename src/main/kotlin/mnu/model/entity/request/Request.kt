@@ -1,7 +1,7 @@
-package mnu.model.request
+package mnu.model.entity.request
 
-import mnu.model.BaseEntity
-import mnu.model.employee.Employee
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.employee.Employee
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.EnumType

@@ -1,6 +1,6 @@
 package mnu.repository
 
-import mnu.model.DistrictHouse
+import mnu.model.entity.DistrictHouse
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 

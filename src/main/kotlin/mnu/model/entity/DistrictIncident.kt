@@ -1,6 +1,6 @@
-package mnu.model
+package mnu.model.entity
 
-import mnu.model.employee.SecurityEmployee
+import mnu.model.entity.employee.SecurityEmployee
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column

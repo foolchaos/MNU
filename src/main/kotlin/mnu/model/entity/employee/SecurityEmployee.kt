@@ -1,9 +1,9 @@
-package mnu.model.employee
+package mnu.model.entity.employee
 
-import mnu.model.BaseEntity
-import mnu.model.DistrictIncident
-import mnu.model.Transport
-import mnu.model.Weapon
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.DistrictIncident
+import mnu.model.entity.Transport
+import mnu.model.entity.Weapon
 import javax.persistence.*
 
 @Entity

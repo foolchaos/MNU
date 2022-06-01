@@ -1,7 +1,7 @@
 package mnu.repository
 
-import mnu.model.DistrictHouse
-import mnu.model.DistrictIncident
+import mnu.model.entity.DistrictHouse
+import mnu.model.entity.DistrictIncident
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 

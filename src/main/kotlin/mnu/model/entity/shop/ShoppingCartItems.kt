@@ -1,8 +1,8 @@
-package mnu.model.shop
+package mnu.model.entity.shop
 
-import mnu.model.BaseEntity
-import mnu.model.Transport
-import mnu.model.Weapon
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.Transport
+import mnu.model.entity.Weapon
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn

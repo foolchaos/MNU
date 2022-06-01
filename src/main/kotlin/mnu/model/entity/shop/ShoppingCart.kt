@@ -1,7 +1,7 @@
-package mnu.model.shop
+package mnu.model.entity.shop
 
-import mnu.model.BaseEntity
-import mnu.model.User
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.User
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Entity

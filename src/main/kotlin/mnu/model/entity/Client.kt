@@ -1,6 +1,6 @@
-package mnu.model
+package mnu.model.entity
 
-import mnu.model.employee.ManagerEmployee
+import mnu.model.entity.employee.ManagerEmployee
 import javax.persistence.*
 
 enum class ClientType {

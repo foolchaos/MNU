@@ -1,8 +1,8 @@
 package mnu.repository
 
 
-import mnu.model.Weapon
-import mnu.model.WeaponType
+import mnu.model.entity.Weapon
+import mnu.model.entity.WeaponType
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 

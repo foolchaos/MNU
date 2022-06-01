@@ -1,6 +1,6 @@
 package mnu.repository
 
-import mnu.model.User
+import mnu.model.entity.User
 import org.springframework.stereotype.Repository
 
 @Repository

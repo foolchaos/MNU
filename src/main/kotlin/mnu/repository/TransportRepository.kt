@@ -1,7 +1,7 @@
 package mnu.repository
 
-import mnu.model.Transport
-import mnu.model.TransportType
+import mnu.model.entity.Transport
+import mnu.model.entity.TransportType
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 

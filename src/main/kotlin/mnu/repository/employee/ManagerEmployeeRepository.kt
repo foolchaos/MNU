@@ -1,6 +1,6 @@
 package mnu.repository.employee
 
-import mnu.model.employee.ManagerEmployee
+import mnu.model.entity.employee.ManagerEmployee
 import mnu.repository.BaseRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository

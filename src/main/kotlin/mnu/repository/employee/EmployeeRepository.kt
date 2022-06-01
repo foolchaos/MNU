@@ -1,7 +1,7 @@
 package mnu.repository.employee
 
-import mnu.model.employee.Employee
-import mnu.model.employee.PersonStatus
+import mnu.model.entity.employee.Employee
+import mnu.model.entity.employee.PersonStatus
 import mnu.repository.BaseRepository
 import org.springframework.stereotype.Repository
 

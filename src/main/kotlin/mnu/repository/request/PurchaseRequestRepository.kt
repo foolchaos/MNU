@@ -1,7 +1,7 @@
 package mnu.repository.request
 
-import mnu.model.User
-import mnu.model.request.PurchaseRequest
+import mnu.model.entity.User
+import mnu.model.entity.request.PurchaseRequest
 import mnu.repository.BaseRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository

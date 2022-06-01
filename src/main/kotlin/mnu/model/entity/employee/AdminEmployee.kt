@@ -1,9 +1,8 @@
-package mnu.model.employee
+package mnu.model.entity.employee
 
-import mnu.model.BaseEntity
+import mnu.model.entity.BaseEntity
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.MapsId
 import javax.persistence.OneToOne
 import javax.persistence.Table
 

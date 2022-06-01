@@ -1,8 +1,8 @@
 package mnu.repository
 
 //import mnu.model.Vacancy
-import mnu.model.Prawn
-import mnu.model.employee.ManagerEmployee
+import mnu.model.entity.Prawn
+import mnu.model.entity.employee.ManagerEmployee
 import org.springframework.stereotype.Repository
 
 @Repository

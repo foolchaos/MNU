@@ -1,6 +1,6 @@
 package mnu
 
-import mnu.model.DistrictHouse
+import mnu.model.entity.DistrictHouse
 import mnu.repository.DistrictHouseRepository
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct

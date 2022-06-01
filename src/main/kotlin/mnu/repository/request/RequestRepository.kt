@@ -1,8 +1,8 @@
 package mnu.repository.request
 
-import mnu.model.employee.Employee
-import mnu.model.request.Request
-import mnu.model.request.RequestStatus
+import mnu.model.entity.employee.Employee
+import mnu.model.entity.request.Request
+import mnu.model.entity.request.RequestStatus
 import mnu.repository.BaseRepository
 import org.springframework.stereotype.Repository
 

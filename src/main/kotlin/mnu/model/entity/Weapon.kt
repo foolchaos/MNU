@@ -1,4 +1,4 @@
-package mnu.model
+package mnu.model.entity
 
 import javax.persistence.*
 import javax.validation.constraints.Min
@@ -14,13 +14,13 @@ enum class WeaponType {
 
     companion object {
         fun fromClient(type: String?): WeaponType? = when (type) {
-            "melee" -> WeaponType.MELEE
-            "pistol" -> WeaponType.PISTOL
-            "submachine_gun" -> WeaponType.SUBMACHINE_GUN
-            "assault_rifle" -> WeaponType.ASSAULT_RIFLE
-            "light_machine_gun" -> WeaponType.LIGHT_MACHINE_GUN
-            "sniper_rifle" -> WeaponType.SNIPER_RIFLE
-            "alien" -> WeaponType.ALIEN
+            "melee" -> MELEE
+            "pistol" -> PISTOL
+            "submachine_gun" -> SUBMACHINE_GUN
+            "assault_rifle" -> ASSAULT_RIFLE
+            "light_machine_gun" -> LIGHT_MACHINE_GUN
+            "sniper_rifle" -> SNIPER_RIFLE
+            "alien" -> ALIEN
             else -> null
         }
     }

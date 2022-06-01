@@ -1,4 +1,4 @@
-package mnu.model
+package mnu.model.entity
 
 import javax.persistence.*
 import javax.validation.constraints.Min
@@ -9,8 +9,8 @@ enum class TransportType {
 
     companion object {
         fun fromClient(type: String?): TransportType? = when (type) {
-            "land" -> TransportType.LAND
-            "air" -> TransportType.AIR
+            "land" -> LAND
+            "air" -> AIR
             else -> null
         }
     }

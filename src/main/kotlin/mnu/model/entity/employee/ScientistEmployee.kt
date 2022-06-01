@@ -1,7 +1,7 @@
-package mnu.model.employee
+package mnu.model.entity.employee
 
-import mnu.model.BaseEntity
-import mnu.model.Experiment
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.Experiment
 import javax.persistence.*
 
 @Entity

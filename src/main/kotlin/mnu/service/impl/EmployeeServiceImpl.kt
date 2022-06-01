@@ -1,6 +1,6 @@
 package mnu.service.impl
 
-import mnu.model.employee.Employee
+import mnu.model.entity.employee.Employee
 import mnu.repository.employee.EmployeeRepository
 import mnu.service.EmployeeService
 import org.springframework.beans.factory.annotation.Autowired

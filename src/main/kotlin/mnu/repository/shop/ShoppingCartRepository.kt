@@ -1,8 +1,8 @@
 package mnu.repository.shop
 
-import mnu.model.User
-import mnu.model.shop.ShoppingCart
-import mnu.model.shop.ShoppingCartStatus
+import mnu.model.entity.User
+import mnu.model.entity.shop.ShoppingCart
+import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.repository.BaseRepository
 import org.springframework.stereotype.Repository
 

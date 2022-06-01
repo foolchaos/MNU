@@ -1,12 +1,11 @@
-package mnu.model.employee
+package mnu.model.entity.employee
 
-import mnu.model.BaseEntity
-import mnu.model.User
+import mnu.model.entity.BaseEntity
+import mnu.model.entity.User
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
-import javax.persistence.MapsId
 import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.validation.constraints.Max

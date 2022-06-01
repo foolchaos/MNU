@@ -1,6 +1,6 @@
 package mnu.service
 
-import mnu.model.User
+import mnu.model.entity.User
 
 interface UserService {
     fun findAll(): List<User>
