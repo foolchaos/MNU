@@ -10,8 +10,8 @@ interface ScientistEmployeeRepository : BaseRepository<ScientistEmployee, Long> 
 
 
     @Query(
-        "select s.employee_user_id as id, e.name as name, e.position as position, e.level as level from scientists s" +
-                " inner join employees e on (s.employee_user_id = e.user_id) where (e.level < ?1);", nativeQuery = true
+        "select s.employee_id as id, e.name as name, e.position as position, e.level as level from scientists s" +
+                " inner join employees e on (s.employee_id = e.user_id) where (e.level < ?1);", nativeQuery = true
     )
     fun getAssistants(examinatorLvl: Int): List<Assistant>?
 
