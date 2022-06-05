@@ -4,11 +4,6 @@ import mnu.model.entity.employee.ScientistEmployee
 import java.time.LocalDateTime
 import javax.persistence.*
 
-enum class ExperimentType {
-    MINOR,
-    MAJOR
-}
-
 enum class ExperimentStatus {
     APPROVED,
     PENDING,
@@ -19,7 +14,6 @@ enum class ExperimentStatus {
 @Entity
 @Table(name = "experiments")
 class Experiment(
-    var type: ExperimentType = ExperimentType.MINOR,
     @Column(nullable = false)
     var title: String = "",
 

@@ -484,10 +484,6 @@ class AdministratorController (
         val experiment = experimentRepository.findById(experimentId)
         if (!experiment.isPresent)
             return "Experiment with such id does not exist."
-        val checkedExperiment = experiment.get()
-        if (checkedExperiment.type == ExperimentType.MINOR)
-            return "Minor experiment requests are handled by high-level scientists."
-
         return null
     }
 
