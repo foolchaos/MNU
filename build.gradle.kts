@@ -5,6 +5,8 @@ plugins {
     kotlin("kapt") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
+    kotlin("plugin.noarg") version "1.6.21"
+    kotlin("plugin.allopen") version "1.6.21"
     id("org.springframework.boot") version "2.5.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     application

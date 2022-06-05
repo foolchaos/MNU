@@ -22,18 +22,4 @@ class ApplicationController {
     @Autowired
     val employeeRepository: EmployeeRepository? = null
 
-//    @Autowired
-//    val cashRewardRepository: CashRewardRepository? = null
-
-//    @ModelAttribute("karma")
-//    fun getKarma(principal: Principal) : String {
-//        val curUser = userRepository?.findByLogin(principal.name)!!
-//        return prawnRepository?.findById(curUser.id!!)?.get()!!.karma.toString()
-//    }
-//
-//    @ModelAttribute("balance")
-//    fun getBalance(principal: Principal) : String {
-//        val curUser = userRepository?.findByLogin(principal.name)!!
-//        return prawnRepository?.findById(curUser.id!!)?.get()!!.balance.toString()
-//    }
 }

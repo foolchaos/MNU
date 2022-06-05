@@ -3,6 +3,7 @@ package mnu.model.entity.request
 import mnu.model.entity.BaseEntity
 import mnu.model.entity.User
 import mnu.model.entity.shop.ShoppingCart
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
@@ -22,7 +23,7 @@ class PurchaseRequest (
     var cart: ShoppingCart? = null
 ): BaseEntity<Long>() {
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var request: Request? = null
 
 }

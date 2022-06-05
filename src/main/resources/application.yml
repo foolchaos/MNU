@@ -4,7 +4,16 @@ spring:
     username: mnu
     password: mnu
     driver-class-name: org.postgresql.Driver
-
+  mail:
+    host: smtp.gmail.com
+    username: mnu.cw1@gmail.com
+    password: mkqmyktf5xRb3Zg
+    port: 587
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+        required: true
   jpa:
     hibernate:
       ddl-auto: update

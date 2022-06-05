@@ -64,11 +64,11 @@ class AdministratorController (
         return "administrators/admin__prawn-registration.html"
     }*/
 
-    /*@GetMapping("/main")
+    @GetMapping("/main")
     fun adminMenu(model: Model) : String {
         val pendingRequests = requestRepository.findAllByStatus(RequestStatus.PENDING)
 
-        val newWeaponRequests = newWeaponRequestRepository.findAll()
+        /*val newWeaponRequests = newWeaponRequestRepository.findAll()
         val nwPendingRequests = ArrayList<NewWeaponRequest>()
         for (i in 0 until pendingRequests!!.size) {
             for (j in 0 until newWeaponRequests.size) {
@@ -102,7 +102,7 @@ class AdministratorController (
                 if (vacApplicationRequests[j].request == pendingRequests[i])
                     vaPendingRequests.add(vacApplicationRequests[j])
             }
-        }
+        }*/
 
         val purchaseRequests = purchaseRequestRepository.findAll()
         val pPendingRequests = ArrayList<PurchaseRequest>()
@@ -114,16 +114,16 @@ class AdministratorController (
             }
         }
 
-        model.addAttribute("new_prod_count", nwPendingRequests.size + ntPendingRequests.size)
+        /*model.addAttribute("new_prod_count", nwPendingRequests.size + ntPendingRequests.size)
         model.addAttribute("new_vac_count", nvPendingRequests.size)
         model.addAttribute("vac_appl_count", vaPendingRequests.size)
         model.addAttribute("purch_count", pPendingRequests.size)
         model.addAttribute("experiment_count",
-            experimentRepository.countAllByStatusAndType(ExperimentStatus.PENDING, ExperimentType.MAJOR))
+            experimentRepository.countAllByStatusAndType(ExperimentStatus.PENDING, ExperimentType.MAJOR))*/
         model.addAttribute("ongoing_incidents",
             districtIncidentRepository.findAllByLevelToAndDangerLevelGreaterThan(0, 0)?.size)
         return "administrators/admin__menu.html"
-    }*/
+    }
 
     /*@GetMapping("/experiments")
     fun adminExperiments(model: Model): String {
