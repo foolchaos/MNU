@@ -23,10 +23,6 @@
         <a th:href="@{/sci/main/articles}" class="grid-button button">
             Articles
         </a>
-        <a th:href="@{/sci/main/requests}" class="grid-button button">
-            Requests
-            <div class="notification-number" th:if="${experimentCount > 0}" th:text="${experimentCount}"></div>
-        </a>
         <a th:href="@{/sci/experiment}" class="add-button grid-button button">
             Add Experiment
         </a>
@@ -50,9 +46,8 @@
                 <img th:case="FINISHED" class="content-icon" alt="finished" th:src="@{/images/tick.png}">
             </div>
             <span class="header-text">
-                    <span th:text="${exp.type.name()} == 'MAJOR' ? 'Major' : 'Minor'"></span> Exp. #<span
-                    th:text="${exp.id}"></span> <b><span th:text="${exp.title}"></span></b>
-                </span>
+                    Exp. #<span th:text="${exp.id}"></span> <b><span th:text="${exp.title}"></span></b>
+            </span>
         </div>
         <div class="content__main" th:switch="${exp.status.name()}">
             <div class="flex-column-left">

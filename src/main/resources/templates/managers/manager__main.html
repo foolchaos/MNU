@@ -25,19 +25,23 @@
             Purchase requests
             <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
         </a>
-        <a th:href="@{/man/newWeapons}" class="flex-column grid-button button">
+        <a class="flex-column grid-button button">
+            <!-- th:href="@{/man/newWeapons}" -->
             New weapons
             <div class="notification-number" th:if="${new_weap_count > 0}" th:text="${new_weap_count}"></div>
         </a>
-        <a th:href="@{/man/newEquipment}" class="flex-column grid-button button">
+        <a class="flex-column grid-button button">
+            <!-- th:href="@{/man/newEquipment}" -->
             Equipment change
             <div class="notification-number" th:if="${eq_change_count > 0}" th:text="${eq_change_count}"></div>
         </a>
-        <a th:href="@{/man/jobApplications}" class="flex-column grid-button button">
+        <a class="flex-column grid-button button">
+            <!-- th:href="@{/man/jobApplications}" -->
             Prawns' job applications
             <div class="notification-number" th:if="${vac_appl_count > 0}" th:text="${vac_appl_count}"></div>
         </a>
-        <a th:href="@{/man/registerPrawn}" class="flex-column grid-button button">
+        <a class="flex-column grid-button button">
+            <!-- th:href="@{/man/registerPrawn}" -->
             Prawns registrations
         </a>
     </div>

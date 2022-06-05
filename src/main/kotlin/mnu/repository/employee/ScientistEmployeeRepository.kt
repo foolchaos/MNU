@@ -11,7 +11,7 @@ interface ScientistEmployeeRepository : BaseRepository<ScientistEmployee, Long> 
 
     @Query(
         "select s.employee_id as id, e.name as name, e.position as position, e.level as level from scientists s" +
-                " inner join employees e on (s.employee_id = e.user_id) where (e.level < ?1);", nativeQuery = true
+                " inner join employees e on (s.employee_id = e.id) where (e.level < ?1);", nativeQuery = true
     )
     fun getAssistants(examinatorLvl: Int): List<Assistant>?
 
@@ -22,6 +22,8 @@ interface ScientistEmployeeRepository : BaseRepository<ScientistEmployee, Long> 
         val level: Int
     }
 
+    fun findByEmployeeId(employeeId: Long): ScientistEmployee?
+    
     @Query(
         "select count(*) from scientists s inner join experiments ex on (s.id = ex.examinator_id);",
         nativeQuery = true

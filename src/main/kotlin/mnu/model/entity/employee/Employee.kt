@@ -28,7 +28,7 @@ open class Employee(
     @Min(0)
     var salary: Long? = null,
     var position: String? = null
-) : BaseEntity<Long>() {
+) : BaseEntity<Long>(), java.io.Serializable {
     @OneToOne
     var user: User? = null
 

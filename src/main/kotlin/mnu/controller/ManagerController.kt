@@ -1,26 +1,14 @@
 package mnu.controller
 
 import mnu.EmailSender
-//import mnu.form.PrawnRegistrationForm
-import mnu.model.entity.Prawn
-import mnu.model.entity.User
-import mnu.model.entity.Weapon
 import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.Role
 import mnu.model.entity.shop.ShoppingCartStatus
-//import mnu.model.entity.request.ChangeEquipmentRequest
-//import mnu.model.entity.request.NewWeaponRequest
 import mnu.model.entity.request.PurchaseRequest
-//import mnu.model.entity.request.VacancyApplicationRequest
-import mnu.repository.DistrictHouseRepository
 import mnu.repository.TransportRepository
-//import mnu.repository.VacancyRepository
 import mnu.repository.WeaponRepository
 import mnu.repository.employee.ManagerEmployeeRepository
-import mnu.repository.employee.SecurityEmployeeRepository
 import mnu.repository.request.*
-import mnu.repository.shop.ShoppingCartRepository
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -32,17 +20,10 @@ import java.time.LocalDateTime
 @RequestMapping("/man")
 class ManagerController (
     val managerEmployeeRepository: ManagerEmployeeRepository,
-    val securityEmployeeRepository: SecurityEmployeeRepository,
     val requestRepository: RequestRepository,
     val weaponRepository: WeaponRepository,
     val transportRepository: TransportRepository,
-    val districtHouseRepository: DistrictHouseRepository,
-//    val newWeaponRequestRepository: NewWeaponRequestRepository,
-//    val changeEquipmentRequestRepository: ChangeEquipmentRequestRepository,
-//    val vacancyRepository: VacancyRepository,
-//    val vacancyApplicationRequestRepository: VacancyApplicationRequestRepository,
     val purchaseRequestRepository: PurchaseRequestRepository,
-    val shoppingCartRepository: ShoppingCartRepository,
     val emailSender: EmailSender
 ): ApplicationController() {
 
