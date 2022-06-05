@@ -28,17 +28,22 @@
         Purchase & sale requests
         <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
     </a>
-    <a th:href="@{/admin/employee}" class="flex-column employees grid-button button">Employees</a>
-    <a th:href="@{/admin/vacancies}" class="flex-column prawn-vacancies grid-button button">
+    <!-- th:href="@{/admin/employee}" -->
+    <a class="flex-column employees grid-button button">Employees</a>
+    <!-- th:href="@{/admin/vacancies}"-->
+    <a class="flex-column prawn-vacancies grid-button button">
         Prawn vacancies
         <div class="notification-number" th:if="${new_vac_count > 0}" th:text="${new_vac_count}"></div>
     </a>
-    <a th:href="@{/admin/newWeapons}" class="flex-column new-weapons grid-button button">
+    <!-- th:href="@{/admin/newWeapons}" -->
+    <a class="flex-column new-weapons grid-button button">
         New weapons and transport
         <div class="notification-number" th:if="${new_prod_count > 0}" th:text="${new_prod_count}"></div>
     </a>
-    <a th:href="@{/admin/prawns}" class="flex-column prawn-registration grid-button button">Prawn registration</a>
-    <a th:href="@{/admin/jobApplications}" class="flex-column prawn-job-applications grid-button button">
+    <!-- th:href="@{/admin/prawns}" -->
+    <a class="flex-column prawn-registration grid-button button">Prawn registration</a>
+    <!-- th:href="@{/admin/jobApplications}" -->
+    <a class="flex-column prawn-job-applications grid-button button">
         Prawns' job applications
         <div class="notification-number" th:if="${vac_appl_count > 0}" th:text="${vac_appl_count}"></div>
     </a>
