@@ -328,17 +328,17 @@ class ManagerController (
         return if (!regex.matches(form.username) || !regex.matches(form.password)) {
             redirect.addFlashAttribute("form", form)
             redirect.addFlashAttribute("error", "Only latin letters, numbers, \"_\" and \".\" are supported.")
-            "redirect:/man/prawns"
+            "redirect:/man/registerPrawn"
         } else {
             if (form.username.length < 4) {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Username length should be at least 4 symbols.")
-                return "redirect:/man/prawns"
+                return "redirect:/man/registerPrawn"
             }
             if (form.password.length < 6) {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Password length should be at least 6 symbols.")
-                return "redirect:/man/prawns"
+                return "redirect:/man/registerPrawn"
             }
 
             val passwordEncoder = BCryptPasswordEncoder()
@@ -348,7 +348,7 @@ class ManagerController (
             return if (existingUser != null) {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Username '${form.username}' is already taken. Please try again.")
-                "redirect:/man/prawns"
+                "redirect:/man/registerPrawn"
             } else {
                 val houseIdList = districtHouseRepository.getAllIds()!!
 
