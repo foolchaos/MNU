@@ -1,5 +1,6 @@
 package mnu.model.entity
 
+import mnu.model.Vacancy
 import mnu.model.entity.employee.ManagerEmployee
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -27,11 +28,9 @@ class Prawn(
     @JoinColumn(name = "manager_id", referencedColumnName = "employee_id")
     var manager: ManagerEmployee? = null
 
-    /*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id", referencedColumnName = "id")
     var job: Vacancy? = null
-     */
 
     var balance: Double = 0.0
 

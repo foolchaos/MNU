@@ -1,14 +1,19 @@
 package mnu.controller
 
 import mnu.EmailSender
+import mnu.model.entity.Prawn
 import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.Role
+import mnu.model.entity.User
 import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.entity.request.PurchaseRequest
+import mnu.model.form.PrawnRegistrationForm
+import mnu.repository.DistrictHouseRepository
 import mnu.repository.TransportRepository
 import mnu.repository.WeaponRepository
 import mnu.repository.employee.ManagerEmployeeRepository
 import mnu.repository.request.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -24,6 +29,7 @@ class ManagerController (
     val weaponRepository: WeaponRepository,
     val transportRepository: TransportRepository,
     val purchaseRequestRepository: PurchaseRequestRepository,
+    val districtHouseRepository: DistrictHouseRepository,
     val emailSender: EmailSender
 ): ApplicationController() {
 
@@ -291,6 +297,77 @@ class ManagerController (
         } else {
             redirect.addFlashAttribute("error", error)
             "redirect:/man/purchaseRequests"
+        }
+    }
+
+    @GetMapping("/registerPrawn")
+    fun registerPrawn(model: Model): String {
+        model.addAttribute("form", PrawnRegistrationForm())
+        return "managers/manager__prawn-registration.html"
+    }
+
+    @PostMapping("/registerPrawn")
+    fun addPrawn(
+        @ModelAttribute form: PrawnRegistrationForm, principal: Principal,
+        redirect: RedirectAttributes
+    ): String {
+
+        val curUser = userRepository?.findByLogin(principal.name)!!
+        val possibleManager = managerEmployeeRepository.findById(curUser.id!!)
+
+        /* sussy code
+        if (!possibleManager.isPresent) {
+            redirect.addFlashAttribute("form", form)
+            redirect.addFlashAttribute("error", "You are not a manager.")
+            return "redirect:/"
+        }*/
+
+        val existingUser = userRepository?.findByLogin(form.username)
+        val regex = """[a-zA-Z0-9_.]+""".toRegex()
+
+        return if (!regex.matches(form.username) || !regex.matches(form.password)) {
+            redirect.addFlashAttribute("form", form)
+            redirect.addFlashAttribute("error", "Only latin letters, numbers, \"_\" and \".\" are supported.")
+            "redirect:/man/prawns"
+        } else {
+            if (form.username.length < 4) {
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("error", "Username length should be at least 4 symbols.")
+                return "redirect:/man/prawns"
+            }
+            if (form.password.length < 6) {
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("error", "Password length should be at least 6 symbols.")
+                return "redirect:/man/prawns"
+            }
+
+            val passwordEncoder = BCryptPasswordEncoder()
+            val encodedPassword = passwordEncoder.encode(form.password)
+            form.password = encodedPassword
+
+            return if (existingUser != null) {
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("error", "Username '${form.username}' is already taken. Please try again.")
+                "redirect:/man/prawns"
+            } else {
+                val houseIdList = districtHouseRepository.getAllIds()!!
+
+                val newUser = User(form.username, form.password, Role.PRAWN)
+                val newPrawn = Prawn(form.name).apply {
+                    this.user = newUser
+                    this.districtHouse = districtHouseRepository.findById(houseIdList.random()).get()
+                    this.manager = possibleManager.get()
+                    this.karma = 50
+                    this.balance = 350.0
+                }
+
+                userRepository?.save(newUser)
+                prawnRepository?.save(newPrawn)
+
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("status", "Successfully registered a new prawn.")
+                "redirect:/man/main"
+            }
         }
     }
 

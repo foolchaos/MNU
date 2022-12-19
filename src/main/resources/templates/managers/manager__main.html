@@ -40,8 +40,7 @@
             Prawns' job applications
             <div class="notification-number" th:if="${vac_appl_count > 0}" th:text="${vac_appl_count}"></div>
         </a>
-        <a class="flex-column grid-button button">
-            <!-- th:href="@{/man/registerPrawn}" -->
+        <a th:href="@{/man/registerPrawn}" class="flex-column grid-button button">
             Prawns registrations
         </a>
     </div>
