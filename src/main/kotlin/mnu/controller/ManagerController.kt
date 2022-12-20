@@ -5,6 +5,8 @@ import mnu.model.entity.Prawn
 import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.Role
 import mnu.model.entity.User
+import mnu.model.entity.Weapon
+import mnu.model.entity.request.NewWeaponRequest
 import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.entity.request.PurchaseRequest
 import mnu.model.form.PrawnRegistrationForm
@@ -30,6 +32,7 @@ class ManagerController (
     val transportRepository: TransportRepository,
     val purchaseRequestRepository: PurchaseRequestRepository,
     val districtHouseRepository: DistrictHouseRepository,
+    val newWeaponRequestRepository: NewWeaponRequestRepository,
     val emailSender: EmailSender
 ): ApplicationController() {
 
@@ -368,6 +371,124 @@ class ManagerController (
                 redirect.addFlashAttribute("status", "Successfully registered a new prawn.")
                 "redirect:/man/main"
             }
+        }
+    }
+
+    @GetMapping("/newWeapons")
+    fun manNewWeapons(principal: Principal, model: Model): String {
+        val weaponRequests = newWeaponRequestRepository.findAll()
+        val requestsForManager = ArrayList<NewWeaponRequest>()
+        weaponRequests.forEach {
+            if ((it.user!!.role == Role.SECURITY || it.user!!.role == Role.SCIENTIST) && it.request!!.status == RequestStatus.PENDING)
+                requestsForManager.add(it)
+        }
+        model.addAttribute("requests", requestsForManager)
+        return "managers/manager__new-weapons.html"
+    }
+
+    fun newWeaponChoiceError(newWeaponRequestId: Long, principal: Principal): String? {
+        val request = newWeaponRequestRepository.findById(newWeaponRequestId)
+        if (!request.isPresent)
+            return "Request with such id does not exist."
+        return null
+    }
+
+    @PostMapping("/acceptNewWeapon/{id}")
+    fun acceptNewWeapon(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
+        val user = userRepository?.findByLogin(principal.name)
+        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+
+        val error = newWeaponChoiceError(id, principal)
+        return if (error == null) {
+            val checkedRequest = newWeaponRequestRepository.findById(id).get()
+
+            if (checkedRequest.request!!.status != RequestStatus.PENDING) {
+                redirect.addFlashAttribute("error", "Request has already been handled.")
+                "redirect:/man/newWeapons"
+            } else {
+                checkedRequest.request!!.apply {
+                    this.statusDate = LocalDateTime.now()
+                    this.status = RequestStatus.ACCEPTED
+                    this.resolver = currentManager
+                }
+                val newWeapon = Weapon(
+                    checkedRequest.name, checkedRequest.type,
+                    checkedRequest.description, checkedRequest.price, checkedRequest.requiredAccessLvl
+                )
+                    .apply { this.quantity = checkedRequest.quantity }
+                weaponRepository.save(newWeapon)
+
+                newWeaponRequestRepository.save(checkedRequest)
+                redirect.addFlashAttribute("status", "Request accepted.")
+                "redirect:/man/newWeapons"
+            }
+
+        } else {
+            redirect.addFlashAttribute("error", error)
+            "redirect:/man/newWeapons"
+        }
+    }
+
+
+    @PostMapping("/rejectNewWeapon/{id}")
+    fun rejectNewWeapon(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
+        val user = userRepository?.findByLogin(principal.name)
+        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+
+        val error = newWeaponChoiceError(id, principal)
+        return if (error == null) {
+            val checkedRequest = newWeaponRequestRepository.findById(id).get()
+
+            if (checkedRequest.request!!.status != RequestStatus.PENDING) {
+                redirect.addFlashAttribute("error", "Request has already been handled.")
+                "redirect:/man/newWeapons"
+            } else {
+                checkedRequest.request!!.apply {
+                    this.statusDate = LocalDateTime.now()
+                    this.status = RequestStatus.REJECTED
+                    this.resolver = currentManager
+                }
+                newWeaponRequestRepository.save(checkedRequest)
+
+                redirect.addFlashAttribute("status", "Request rejected.")
+                "redirect:/man/newWeapons"
+            }
+
+        } else {
+            redirect.addFlashAttribute("error", error)
+            "redirect:/man/newWeapons"
+        }
+    }
+
+    @PostMapping("/undoWeaponChoice/{id}")
+    fun undoWeapChoice(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
+        val user = userRepository?.findByLogin(principal.name)
+        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+
+        val error = newWeaponChoiceError(id, principal)
+        return if (error == null) {
+            val checkedRequest = newWeaponRequestRepository.findById(id).get()
+
+            checkedRequest.request!!.apply {
+                this.statusDate = LocalDateTime.now()
+                this.status = RequestStatus.PENDING
+                this.resolver = currentManager
+            }
+            val weapons = weaponRepository.findAll().reversed()
+            for (i in weapons.indices) {
+                if (weapons[i].name == checkedRequest.name)
+                    weaponRepository.delete(weapons[i])
+                break
+            }
+
+            newWeaponRequestRepository.save(checkedRequest)
+
+            redirect.addFlashAttribute("status", "Undone.")
+            "redirect:/man/newWeapons"
+
+        } else {
+            redirect.addFlashAttribute("error", error)
+            "redirect:/man/newWeapons"
         }
     }
 

@@ -25,8 +25,7 @@
             Purchase requests
             <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
         </a>
-        <a class="flex-column grid-button button">
-            <!-- th:href="@{/man/newWeapons}" -->
+        <a th:href="@{/man/newWeapons}" class="flex-column grid-button button">
             New weapons
             <div class="notification-number" th:if="${new_weap_count > 0}" th:text="${new_weap_count}"></div>
         </a>
