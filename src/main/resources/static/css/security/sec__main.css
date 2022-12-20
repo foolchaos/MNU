@@ -1,0 +1,57 @@
+@import "../common.css";
+
+body {
+    margin: 0;
+}
+
+.button_profile {
+    margin: initial;
+}
+
+.change-button {
+    margin-right: 30px;
+}
+
+.content {
+    text-align: center;
+    margin-top: 109px;
+}
+
+.content__item {
+    margin: 25px auto;
+    border: 2px solid black;
+    width: 70%;
+}
+
+.content__header {
+    height: 35px;
+    border-bottom: 2px solid;
+}
+
+.content__main {
+    word-break: break-word;
+    text-align: left;
+    padding: 12px;
+}
+
+.description {
+    white-space: pre-wrap;
+}
+
+@media (max-width: 1000px) {
+    .content__item {
+        width: 80%
+    }
+}
+
+@media (max-width: 700px) {
+    .content__item {
+        width: 92%
+    }
+}
+
+@media (max-width: 360px) {
+    .change-button {
+        font-size: 18px;
+    }
+}

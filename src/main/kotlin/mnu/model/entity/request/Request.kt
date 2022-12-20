@@ -3,13 +3,7 @@ package mnu.model.entity.request
 import mnu.model.entity.BaseEntity
 import mnu.model.entity.employee.Employee
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 enum class RequestStatus {
     PENDING,
@@ -19,7 +13,7 @@ enum class RequestStatus {
 
 @Entity
 @Table(name = "requests")
-class Request: BaseEntity<Long>() {
+class Request : BaseEntity<Long>() {
 
     @Enumerated(EnumType.STRING)
     var status: RequestStatus? = null
