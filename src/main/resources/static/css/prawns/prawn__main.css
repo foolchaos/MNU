@@ -1,0 +1,15 @@
+@import "../common.css";
+
+.menu-item {
+    margin: 20px;
+}
+
+.menu-content {
+    margin-top: 10.5vh;
+}
+
+@media (max-width: 600px) {
+    .flex-row {
+        flex-direction: column;
+    }
+}

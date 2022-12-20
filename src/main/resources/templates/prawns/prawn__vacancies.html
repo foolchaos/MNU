@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/prawns/prawn__vacancies.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small flex-row-center">
+    <a th:href="@{/}">
+        <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+    </a>
+    <h1> Vacancies</h1>
+</div>
+
+<div class="content">
+    <div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+    <div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+    <form id="form" action="#" th:action="@{/prawn/vacancies}" method="get" class="flex-row-right font-big">
+        <label>
+            Hide unavailable jobs
+            <input th:checked="${param.hide}" id="hider" class="checkbox" name="hide" type="checkbox">
+        </label>
+        <label class="sorter">
+            Sort by:
+            <select id="sorter" name="sort">
+                <option value="salaryAsc"> Salary (asc.)</option>
+                <option th:selected="${param.sort != null ? param.sort[0] == 'salaryDesc' : false}" value="salaryDesc">
+                    Salary (desc.)
+                </option>
+                <option th:selected="${param.sort != null ? param.sort[0] == 'workHoursAsc' : false}"
+                        value="workHoursAsc"> Working hours (asc.)
+                </option>
+                <option th:selected="${param.sort != null ? param.sort[0] == 'workHoursDesc' : false}"
+                        value="workHoursDesc"> Working hours (desc.)
+                </option>
+                <option th:selected="${param.sort != null ? param.sort[0] == 'karmaAsc' : false}" value="karmaAsc">
+                    Karma (asc.)
+                </option>
+                <option th:selected="${param.sort != null ? param.sort[0] == 'karmaDesc' : false}" value="karmaDesc">
+                    Karma (desc.)
+                </option>
+            </select>
+        </label>
+        <input id="submit-sort-button" type="submit" class="hidden">
+    </form>
+
+    <div class="flex-column form-item gray" th:if="${all_vacancies == null or all_vacancies.isEmpty()}">
+        There are no vacancies
+    </div>
+
+    <div class="vacancy-item approved" th:if="${current_job != null}">
+        <div class="flex-column-no-center">
+            <div class="font-big" th:text="${current_job.title}"></div>
+            <div class="form-item_big flex-row-between">
+                <b>Salary</b>
+                <div th:text="${current_job.salary}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Required karma</b>
+                <div th:text="${current_job.requiredKarma}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Working hours/week</b>
+                <div th:text="${current_job.workHoursPerWeek}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Vacant places</b>
+                <div th:text="${current_job.vacantPlaces}"></div>
+            </div>
+            <form action="#" th:action="@{/prawn/quitJob}" method="post" class="form-item">
+                <input type="submit" class="button rejected" value="Quit">
+            </form>
+        </div>
+    </div>
+
+    <div class="vacancy-item pending" th:if="${current_application != null && current_application.prawn == user}">
+        <div class="flex-column-no-center">
+            <div class="font-big" th:text="${current_application.vacancy.title}"></div>
+            <div class="form-item_big flex-row-between">
+                <b>Salary</b>
+                <div th:text="${current_application.vacancy.salary}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Required karma</b>
+                <div th:text="${current_application.vacancy.requiredKarma}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Working hours/week</b>
+                <div th:text="${current_application.vacancy.workHoursPerWeek}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Vacant places</b>
+                <div th:text="${current_application.vacancy.vacantPlaces}"></div>
+            </div>
+            <form action="#" th:action="@{/prawn/withdrawApplication}" method="post" class="form-item">
+                <input type="submit" class="button rejected" value="Withdraw">
+            </form>
+        </div>
+    </div>
+
+    <div class="vacancy-item" th:each="vacancy : ${all_vacancies}"
+         th:classappend="|${user.karma < vacancy.requiredKarma ? 'rejected' : vacancy.vacantPlaces <= 0 ? 'rejected' : 'light-gray-bg'}|">
+        <div class="flex-column-no-center">
+            <div class="font-big" th:text="${vacancy.title}"></div>
+            <div class="form-item_big flex-row-between">
+                <b>Salary</b>
+                <div th:text="${vacancy.salary}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Required karma</b>
+                <div th:text="${vacancy.requiredKarma}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Working hours/week</b>
+                <div th:text="${vacancy.workHoursPerWeek}"></div>
+            </div>
+            <div class="form-item flex-row-between">
+                <b>Vacant places</b>
+                <div th:text="${vacancy.vacantPlaces}"></div>
+            </div>
+            <form action="#" th:action="@{/prawn/vacancyApplication/} + ${vacancy.id}" method="post"
+                  th:if="${user.karma >= vacancy.requiredKarma and vacancy.vacantPlaces > 0}" class="form-item">
+                <input type="submit" class="button approved" value="Apply">
+            </form>
+        </div>
+    </div>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/prawns/prawn__vacancies.js}"></script>
+</body>
+</html>

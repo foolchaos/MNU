@@ -21,7 +21,7 @@
         <div class="notification-number" th:if="${ongoing_incidents > 0}" th:text="${ongoing_incidents}"></div>
     </a>
     <a th:href="@{/admin/experiments}" class="flex-column experiments-articles grid-button button">
-        Experiments & Articles
+        Experiments
         <div class="notification-number" th:if="${experiment_count > 0}" th:text="${experiment_count}"></div>
     </a>
     <a th:href="@{/admin/purchaseRequests}" class="flex-column clients-manufacturers grid-button button">

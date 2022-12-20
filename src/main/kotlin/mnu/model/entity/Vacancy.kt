@@ -1,4 +1,4 @@
-package mnu.model
+package mnu.model.entity
 
 import mnu.model.entity.BaseEntity
 import mnu.model.entity.Prawn
