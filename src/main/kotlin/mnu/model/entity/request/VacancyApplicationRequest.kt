@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table (name = "vacancy_application_requests")
 class VacancyApplicationRequest (@ManyToOne(fetch = FetchType.EAGER)
-                                      @JoinColumn(name = "prawn_id", referencedColumnName = "user_id")
+                                      @JoinColumn(name = "prawn_id", referencedColumnName = "id")
                                       var prawn: Prawn? = null,
 
                                       @ManyToOne(fetch = FetchType.EAGER)
