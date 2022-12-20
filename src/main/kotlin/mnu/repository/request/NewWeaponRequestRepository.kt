@@ -2,9 +2,9 @@ package mnu.repository.request
 
 import mnu.model.entity.User
 import mnu.model.entity.request.NewWeaponRequest
-import org.springframework.data.jpa.repository.JpaRepository
+import mnu.repository.BaseRepository
 
 
-interface NewWeaponRequestRepository : JpaRepository<NewWeaponRequest, Long> {
+interface NewWeaponRequestRepository : BaseRepository<NewWeaponRequest, Long> {
     fun findAllByUser(user: User) : List<NewWeaponRequest>?
 }
