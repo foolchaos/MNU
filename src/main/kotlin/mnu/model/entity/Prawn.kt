@@ -1,6 +1,6 @@
 package mnu.model.entity
 
-import mnu.model.Vacancy
+import mnu.model.entity.Vacancy
 import mnu.model.entity.employee.ManagerEmployee
 import java.time.LocalDateTime
 import javax.persistence.*

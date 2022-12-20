@@ -1,0 +1,75 @@
+@import "../common.css";
+
+body {
+    margin: 0;
+}
+
+.input_big {
+    display: inline;
+}
+
+.checkbox {
+    transform: scale(1.5);
+}
+
+.vacancy-item {
+    display: inline-block;
+    width: 240px;
+    height: 270px;
+    border: 2px solid black;
+    border-radius: 30px;
+    text-align: center;
+    padding: 12px;
+    word-break: break-word;
+    margin: 20px;
+    float: left;
+}
+
+.vacancy-item_big {
+    width: 320px;
+    height: 320px;
+}
+
+.content {
+    text-align: center;
+    padding: 0 4vw;
+    margin-top: 90px;
+}
+
+.sorter {
+    margin: 0 25px;
+}
+
+#sorter {
+    font-size: 18px;
+}
+
+#form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .content {
+        padding: 0 1vw;
+    }
+
+    .flex-row-right {
+        flex-direction: column;
+    }
+
+    .sorter {
+        margin-top: 15px;
+    }
+
+    .vacancy-item {
+        float: none;
+        margin: 10px;
+    }
+}

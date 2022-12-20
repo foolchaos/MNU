@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/prawns/prawn__main.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="flex-row-left">
+    <a th:href="@{/prawn/profile}" class="flex-row-center button">
+        <img alt="profile" th:src="@{/images/profile.png}" class="icon">
+        Profile
+    </a>
+</div>
+
+<div th:if="${status}" th:text="${status}" class="flash flash_success"></div>
+<div th:if="${error}" th:text="${error}" class="flash flash_error"></div>
+
+<div class="flex-row menu-content">
+    <div class="flex-column">
+        <div class="flex-row-center">
+            <img alt="karma" th:src="@{/images/karma.png}" class="menu-item icon_big">
+            <div class="font-huge" th:text="${user.karma}"></div>
+        </div>
+        <a th:href="@{/prawn/vacancies}" class="flex-column button menu-item">
+            <img alt="vacancies" th:src="@{/images/job.png}" class="icon_giant">
+            <div class="font-huge"> Apply for a job</div>
+        </a>
+    </div>
+    <div class="flex-column">
+        <div class="flex-row-center">
+            <img alt="money" th:src="@{/images/gold_coin.png}" class="menu-item icon_big">
+            <div class="font-huge" th:text="${user.balance}"></div>
+        </div>
+        <a th:href="@{/prawn/shop/weapon}" class="flex-column button menu-item">
+            <img alt="store" th:src="@{/images/prawn_cart.png}" class="icon_giant">
+            <div class="font-huge"> Buy items</div>
+        </a>
+    </div>
+</div>
+</body>
+</html>
