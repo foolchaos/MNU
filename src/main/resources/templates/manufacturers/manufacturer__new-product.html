@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/manufacturers/manufacturer__new-item.css}">
+    <title>MNU</title>
+</head>
+<body>
+<div class="fixed-header fixed-header_small">
+    <div id="header_mobile" class="flex-row-center-left">
+        <img th:src="@{/images/burger.png}" id="burger" class="burger icon">
+        <div class="mobile-title">Suggest product</div>
+    </div>
+    <div id="mobile-menu" class="mobile-buttons-row">
+        <a th:href="@{/}">
+            <img alt="back" th:src="@{/images/back.png}" class="button button_back button_round">
+        </a>
+        <a th:href="@{/}" class="grid-button button button_back_mobile">Market</a>
+        <div class="grid-button button button_pressed"> Suggest product</div>
+        <a th:href="@{/manufacturer/newVacancy}" class="grid-button button"> Suggest vacancy</a>
+    </div>
+</div>
+
+<div class="content flex-column">
+    <div class="font-big">
+        You can suggest a new product here and it will appear on the market after our administrator's approval.
+    </div>
+    <form action="#" th:action="@{/manufacturer/newProduct}" th:object="${form}" method="post" class="content_form flex-column-left">
+        <label class="form-item_big">
+            <b>Name</b>
+            <input id="name" name="name" class="input_big" required>
+        </label>
+        <label class="form-item">
+            <b>Type</b>
+            <select id="type" name="type" class="input_big">
+                <option value="melee"> Melee</option>
+                <option value="pistol"> Pistol</option>
+                <option value="submachine_gun"> Submachine gun</option>
+                <option value="assault_rifle"> Assault rifle</option>
+                <option value="light_machine_gun"> Light machine gun</option>
+                <option value="sniper_rifle"> Sniper rifle</option>
+                <option value="alien"> Alien</option>
+                <option value="land"> Land transport</option>
+                <option value="air"> Air transport</option>
+            </select>
+        </label>
+        <label class="form-item">
+            <b>Description</b>
+            <textarea id="description" name="description" class="input_big text-area_big" required></textarea>
+        </label>
+        <label class="form-item">
+            <b>Price</b>
+            <input id="price" name="price" class="input_big" required type="number" min="0">
+        </label>
+        <label class="form-item">
+            <b>Access level</b>
+            <input id="accessLvl" name="accessLvl" class="input_big" required type="number" min="1" max="10" step="1">
+        </label>
+        <input type="submit" class="button submit" value="Suggest">
+    </form>
+</div>
+<script rel="script" type="text/javascript" th:src="@{/js/mobileMenu.js}"></script>
+</body>
+</html>

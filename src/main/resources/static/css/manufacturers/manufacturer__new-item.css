@@ -1,0 +1,48 @@
+@import "../common.css";
+@import "../mobile-burger.css";
+
+body {
+    margin: 0;
+}
+
+.grid-button {
+    margin: auto;
+    text-align: center;
+    width: 18vw;
+    font-size: 22px;
+}
+
+.text-area_big {
+    min-height: 100px;
+}
+
+.submit{
+    margin: 20px auto;
+}
+
+.content {
+    text-align: center;
+    margin: 140px auto auto;
+}
+
+.content_form{
+    text-align: left;
+    width: 250px;
+}
+
+@media (max-width: 850px) {
+    .grid-button {
+        width: 25vw;
+    }
+}
+
+@media (max-width: 700px) {
+    .grid-button {
+        width: 80vw;
+        margin: 15px auto;
+    }
+
+    .content{
+        margin: 120px auto auto;
+    }
+}

@@ -88,11 +88,9 @@ class ScientistController (
     }
 
     fun reportAccessError(experimentId: Long, principal: Principal): String? {
-        val user = userRepository?.findByLogin(principal.name)
-        val possibleScientist = scientistEmployeeRepository.findById(user?.id!!)
-        if (!possibleScientist.isPresent)
-            return "You are not a scientist."
-        val currentScientist = possibleScientist.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val currentScientistEmployee = employeeRepository?.findByUserId(user.id!!)
+        val currentScientist = scientistEmployeeRepository.findByEmployeeId(currentScientistEmployee?.id!!)
         val experiment = experimentRepository.findById(experimentId)
         if (!experiment.isPresent)
             return "Experiment with such id does not exist."
