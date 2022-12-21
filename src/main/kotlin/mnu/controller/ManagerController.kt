@@ -46,6 +46,9 @@ class ManagerController (
 
         val user = userRepository?.findByLogin(principal.name)!!
         val curManager = managerEmployeeRepository.findById(user.id!!).get()
+        /*
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)*/
         val purchaseRequests = purchaseRequestRepository.findAll()
         val pPendingRequests = ArrayList<PurchaseRequest>()
         purchaseRequests.forEach {

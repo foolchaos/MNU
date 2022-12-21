@@ -28,8 +28,7 @@
         Purchase & sale requests
         <div class="notification-number" th:if="${purch_count > 0}" th:text="${purch_count}"></div>
     </a>
-    <!-- th:href="@{/admin/employee}" -->
-    <a class="flex-column employees grid-button button">Employees</a>
+    <a th:href="@{/admin/employee}" class="flex-column employees grid-button button">Employees</a>
     <!-- th:href="@{/admin/vacancies}"-->
     <a class="flex-column prawn-vacancies grid-button button">
         Prawn vacancies

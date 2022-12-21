@@ -1,6 +1,7 @@
 package mnu.controller
 
 //import mnu.repository.CashRewardRepository
+import mnu.repository.CashRewardRepository
 import mnu.repository.ClientRepository
 import mnu.repository.PrawnRepository
 import mnu.repository.UserRepository
@@ -21,5 +22,8 @@ class ApplicationController {
 
     @Autowired
     val employeeRepository: EmployeeRepository? = null
+
+    @Autowired
+    val cashRewardRepository: CashRewardRepository? = null
 
 }

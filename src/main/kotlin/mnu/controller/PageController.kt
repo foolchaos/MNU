@@ -60,6 +60,8 @@ class PageController : ApplicationController() {
         val currentEmployee = employeeRepository?.findByUserId(userRepository?.findByLogin(principal.name)!!.id!!)
         model.addAttribute("user", currentEmployee)
         model.addAttribute("form", NewPasswordForm())
+        val cashRewards = cashRewardRepository?.findAllByEmployeeOrderByIssueDateDesc(currentEmployee!!)
+        model.addAttribute("cashRewards", cashRewards)
         return "profile.html"
     }
 

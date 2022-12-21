@@ -1,6 +1,7 @@
 package mnu.repository.employee
 
 import mnu.model.entity.employee.ManagerEmployee
+import mnu.model.entity.employee.ScientistEmployee
 import mnu.repository.BaseRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -44,5 +45,7 @@ interface ManagerEmployeeRepository : BaseRepository<ManagerEmployee, Long> {
                 " where (r.status = 'RESOLVED');", nativeQuery = true
     )
     fun allResolvedVacancyApplicationRequests(): Long
+
+    fun findByEmployeeId(employeeId: Long): ManagerEmployee?
 
 }
