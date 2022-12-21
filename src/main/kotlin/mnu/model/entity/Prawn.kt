@@ -24,7 +24,7 @@ class Prawn(
     var districtHouse: DistrictHouse? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "employee_id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
     var manager: ManagerEmployee? = null
 
     @ManyToOne(fetch = FetchType.LAZY)

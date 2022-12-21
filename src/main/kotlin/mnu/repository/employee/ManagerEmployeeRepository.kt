@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ManagerEmployeeRepository : BaseRepository<ManagerEmployee, Long> {
-    @Query("select m.employee_id from managers m;", nativeQuery = true)
+    @Query("select m.id from managers m;", nativeQuery = true)
     fun getAllIds(): List<Long>
 
     @Query(

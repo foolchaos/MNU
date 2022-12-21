@@ -22,6 +22,6 @@ class Client(
     var user: User? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "employee_id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
     var manager: ManagerEmployee? = null
 }

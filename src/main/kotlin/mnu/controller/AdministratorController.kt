@@ -471,7 +471,6 @@ class AdministratorController (
                 employeeRepository?.save(newEmployeeUser)
                 when (role) {
                     Role.MANAGER -> managerEmployeeRepository.save(ManagerEmployee().apply {
-                        this.id = newUser.id
                         this.employee = newEmployeeUser
                     })
                     Role.SCIENTIST -> scientistEmployeeRepository.save(ScientistEmployee().apply {

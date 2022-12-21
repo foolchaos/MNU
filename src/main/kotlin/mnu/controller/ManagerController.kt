@@ -45,10 +45,8 @@ class ManagerController (
         val pendingRequests = requestRepository.findAllByStatus(RequestStatus.PENDING)
 
         val user = userRepository?.findByLogin(principal.name)!!
-        val curManager = managerEmployeeRepository.findById(user.id!!).get()
-        /*
         val man = employeeRepository?.findByUserId(user.id!!)
-        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)*/
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
         val purchaseRequests = purchaseRequestRepository.findAll()
         val pPendingRequests = ArrayList<PurchaseRequest>()
         purchaseRequests.forEach {
@@ -85,7 +83,8 @@ class ManagerController (
     @GetMapping("/clients")
     fun manClients(principal: Principal, model: Model): String {
         val user = userRepository?.findByLogin(principal.name)!!
-        val curManager = managerEmployeeRepository.findById(user.id!!).get()
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
         model.addAttribute("clients", clientRepository?.findAllByManagerOrderByIdAsc(curManager))
         return "managers/manager__client-list.html"
     }
@@ -93,7 +92,8 @@ class ManagerController (
     @GetMapping("/prawns")
     fun manPrawns(principal: Principal, model: Model): String {
         val user = userRepository?.findByLogin(principal.name)!!
-        val curManager = managerEmployeeRepository.findById(user.id!!).get()
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
         model.addAttribute("clients", prawnRepository?.findAllByManagerOrderByIdAsc(curManager))
         return "managers/manager__prawn-list.html"
     }
@@ -101,7 +101,8 @@ class ManagerController (
     @GetMapping("/purchaseRequests")
     fun manPurchaseRequests(principal: Principal, model: Model) : String {
         val user = userRepository?.findByLogin(principal.name)!!
-        val curManager = managerEmployeeRepository.findById(user.id!!).get()
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val purchaseRequests = purchaseRequestRepository.findAll()
         val validPurchRequests = ArrayList<PurchaseRequest>()
@@ -130,8 +131,9 @@ class ManagerController (
 
     @PostMapping("/acceptPurchaseRequest/{id}")
     fun acceptPurchaseRequest(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = purchaseReqChoiceError(id, principal)
         return if (error == null) {
@@ -145,7 +147,7 @@ class ManagerController (
             when (userRequestRole) {
                 Role.CUSTOMER -> {
                     val curCustomer = clientRepository?.findByUserId(checkedRequest.user!!.id!!)
-                    if (curCustomer!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                    if (curCustomer!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                         redirect.addFlashAttribute("error", "You are not this client's supervising manager.")
                         return "redirect:/man/purchaseRequests"
                     }
@@ -153,7 +155,7 @@ class ManagerController (
                     checkedRequest.request!!.apply {
                         this.statusDate = LocalDateTime.now()
                         this.status = RequestStatus.ACCEPTED
-                        this.resolver = currentManager
+                        this.resolver = curManager.employee
                     }
                     checkedRequest.cart!!.status = ShoppingCartStatus.RETRIEVED
                     purchaseRequestRepository.save(checkedRequest)
@@ -183,7 +185,7 @@ class ManagerController (
 
                 Role.PRAWN -> {
                     val reqPrawn = prawnRepository?.findByUserId(checkedRequest.user!!.id!!)
-                    if (reqPrawn!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                    if (reqPrawn!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                         redirect.addFlashAttribute("error", "You are not this prawn's supervising manager.")
                         return "redirect:/man/purchaseRequests"
                     }
@@ -191,7 +193,7 @@ class ManagerController (
                     checkedRequest.request!!.apply {
                         this.statusDate = LocalDateTime.now()
                         this.status = RequestStatus.ACCEPTED
-                        this.resolver = currentManager
+                        this.resolver = curManager.employee
                     }
                     checkedRequest.cart!!.items!!.forEach {
                         reqPrawn.balance -= it.price() * it.quantity!!
@@ -219,8 +221,9 @@ class ManagerController (
 
     @PostMapping("/rejectPurchaseRequest/{id}")
     fun rejectPurchaseRequest(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = purchaseReqChoiceError(id, principal)
         return if (error == null) {
@@ -234,7 +237,7 @@ class ManagerController (
             when (userRequestRole) {
                 Role.CUSTOMER -> {
                     val curCustomer = clientRepository?.findByUserId(checkedRequest.user!!.id!!)
-                    if (curCustomer!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                    if (curCustomer!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                         redirect.addFlashAttribute("error", "You are not this client's supervising manager.")
                         return "redirect:/man/purchaseRequests"
                     }
@@ -253,7 +256,7 @@ class ManagerController (
                     checkedRequest.request!!.apply {
                         this.statusDate = LocalDateTime.now()
                         this.status = RequestStatus.REJECTED
-                        this.resolver = currentManager
+                        this.resolver = curManager.employee
                     }
                     checkedRequest.cart!!.status = ShoppingCartStatus.REJECTED
                     purchaseRequestRepository.save(checkedRequest)
@@ -283,7 +286,7 @@ class ManagerController (
 
                 Role.PRAWN -> {
                     val curPrawn = prawnRepository?.findByUserId(checkedRequest.user!!.id!!)
-                    if (curPrawn!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                    if (curPrawn!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                         redirect.addFlashAttribute("error", "You are not this prawn's supervising manager.")
                         return "redirect:/man/purchaseRequests"
                     }
@@ -302,7 +305,7 @@ class ManagerController (
                     checkedRequest.request!!.apply {
                         this.statusDate = LocalDateTime.now()
                         this.status = RequestStatus.REJECTED
-                        this.resolver = currentManager
+                        this.resolver = curManager.employee
                     }
                     checkedRequest.cart!!.status = ShoppingCartStatus.REJECTED
                     purchaseRequestRepository.save(checkedRequest)
@@ -337,7 +340,8 @@ class ManagerController (
     ): String {
 
         val curUser = userRepository?.findByLogin(principal.name)!!
-        val possibleManager = managerEmployeeRepository.findById(curUser.id!!)
+        val man = employeeRepository?.findByUserId(curUser.id!!)
+        val possibleManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         /* sussy code
         if (!possibleManager.isPresent) {
@@ -380,7 +384,7 @@ class ManagerController (
                 val newPrawn = Prawn(form.name).apply {
                     this.user = newUser
                     this.districtHouse = districtHouseRepository.findById(houseIdList.random()).get()
-                    this.manager = possibleManager.get()
+                    this.manager = possibleManager
                     this.karma = 50
                     this.balance = 350.0
                 }
@@ -416,8 +420,9 @@ class ManagerController (
 
     @PostMapping("/acceptNewWeapon/{id}")
     fun acceptNewWeapon(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = newWeaponChoiceError(id, principal)
         return if (error == null) {
@@ -430,7 +435,7 @@ class ManagerController (
                 checkedRequest.request!!.apply {
                     this.statusDate = LocalDateTime.now()
                     this.status = RequestStatus.ACCEPTED
-                    this.resolver = currentManager
+                    this.resolver = curManager.employee
                 }
                 val newWeapon = Weapon(
                     checkedRequest.name, checkedRequest.type,
@@ -453,8 +458,9 @@ class ManagerController (
 
     @PostMapping("/rejectNewWeapon/{id}")
     fun rejectNewWeapon(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = newWeaponChoiceError(id, principal)
         return if (error == null) {
@@ -467,7 +473,7 @@ class ManagerController (
                 checkedRequest.request!!.apply {
                     this.statusDate = LocalDateTime.now()
                     this.status = RequestStatus.REJECTED
-                    this.resolver = currentManager
+                    this.resolver = curManager.employee
                 }
                 newWeaponRequestRepository.save(checkedRequest)
 
@@ -483,8 +489,9 @@ class ManagerController (
 
     @PostMapping("/undoWeaponChoice/{id}")
     fun undoWeapChoice(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = newWeaponChoiceError(id, principal)
         return if (error == null) {
@@ -493,7 +500,7 @@ class ManagerController (
             checkedRequest.request!!.apply {
                 this.statusDate = LocalDateTime.now()
                 this.status = RequestStatus.PENDING
-                this.resolver = currentManager
+                this.resolver = curManager.employee
             }
             val weapons = weaponRepository.findAll().reversed()
             for (i in weapons.indices) {
@@ -517,7 +524,8 @@ class ManagerController (
     @GetMapping("/jobApplications")
     fun manJobApplications(principal: Principal, model: Model): String {
         val user = userRepository?.findByLogin(principal.name)!!
-        val curManager = managerEmployeeRepository.findById(user.id!!).get()
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val vacancyApplicationRequests = vacancyApplicationRequestRepository.findAll()
         val validVacAppRequests = ArrayList<VacancyApplicationRequest>()
@@ -537,8 +545,9 @@ class ManagerController (
 
     @PostMapping("/acceptJobApplication/{id}")
     fun acceptJobApplication(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = jobApplicationChoiceError(id, principal)
         return if (error == null) {
@@ -548,7 +557,7 @@ class ManagerController (
                 redirect.addFlashAttribute("error", "Request has already been handled.")
                 "redirect:/man/jobApplications"
             } else {
-                if (checkedRequest.prawn!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                if (checkedRequest.prawn!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                     redirect.addFlashAttribute("error", "You are not this prawn's supervising manager.")
                     return "redirect:/man/jobApplications"
                 }
@@ -557,7 +566,7 @@ class ManagerController (
                     checkedRequest.request!!.apply {
                         this.statusDate = LocalDateTime.now()
                         this.status = RequestStatus.REJECTED
-                        this.resolver = currentManager
+                        this.resolver = curManager.employee
                     }
                     vacancyApplicationRequestRepository.save(checkedRequest)
                     redirect.addFlashAttribute("error", "No vacant places left, request cannot be satisfied.")
@@ -583,7 +592,7 @@ class ManagerController (
                 checkedRequest.request!!.apply {
                     this.statusDate = LocalDateTime.now()
                     this.status = RequestStatus.ACCEPTED
-                    this.resolver = currentManager
+                    this.resolver = curManager.employee
                 }
                 prawnRepository?.save(prawn)
                 vacancyApplicationRequestRepository.save(checkedRequest)
@@ -599,8 +608,9 @@ class ManagerController (
 
     @PostMapping("/rejectJobApplication/{id}")
     fun rejectJobApplication(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentManager = employeeRepository?.findById(user?.id!!)?.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val curManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
 
         val error = jobApplicationChoiceError(id, principal)
         return if (error == null) {
@@ -610,7 +620,7 @@ class ManagerController (
                 redirect.addFlashAttribute("error", "Request has already been handled.")
                 "redirect:/man/jobApplications"
             } else {
-                if (checkedRequest.prawn!!.manager != managerEmployeeRepository.findById(currentManager!!.id!!).get()) {
+                if (checkedRequest.prawn!!.manager != managerEmployeeRepository.findById(curManager.id!!).get()) {
                     redirect.addFlashAttribute("error", "You are not this prawn's supervising manager.")
                     return "redirect:/man/jobApplications"
                 }
@@ -618,7 +628,7 @@ class ManagerController (
                 checkedRequest.request!!.apply {
                     this.statusDate = LocalDateTime.now()
                     this.status = RequestStatus.REJECTED
-                    this.resolver = currentManager
+                    this.resolver = curManager.employee
                 }
                 vacancyApplicationRequestRepository.save(checkedRequest)
 
