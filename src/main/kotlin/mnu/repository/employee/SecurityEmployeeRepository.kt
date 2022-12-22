@@ -1,5 +1,6 @@
 package mnu.repository.employee
 
+import mnu.model.entity.employee.ScientistEmployee
 import mnu.model.entity.employee.SecurityEmployee
 import mnu.repository.BaseRepository
 import org.springframework.data.jpa.repository.Query
@@ -14,6 +15,7 @@ interface SecurityEmployeeRepository : BaseRepository<SecurityEmployee, Long> {
     )
     fun getAllWorkingSecurity(): List<Array<Any>>
 
+    fun findByEmployeeId(employeeId: Long): SecurityEmployee?
     @Query(
         value = "select count(*) from security_employees s inner join security_in_incidents sii on (s.employee_id = sii.security_id)" +
                 " where (s.employee_id = ?1);", nativeQuery = true

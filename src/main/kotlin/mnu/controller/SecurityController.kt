@@ -38,11 +38,12 @@ class SecurityController(
     @GetMapping("/main")
     fun securityMenu(model: Model, principal: Principal): String {
         val curUser = userRepository?.findByLogin(principal.name)!!
-        val curSecurity = securityEmployeeRepository.findById(curUser.id!!).get()
+        val curSecEmployee = employeeRepository?.findByUserId(curUser.id!!)
+        val curSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)
 
         val allSuitableIncidents = districtIncidentRepository
             .findAllByAvailablePlacesGreaterThanAndLevelFromLessThanEqualAndLevelToGreaterThanEqual(
-                0, curSecurity.employee!!.level!!, curSecurity.employee!!.level!!
+                0, curSecurity?.employee!!.level!!, curSecurity.employee!!.level!!
             ) as MutableList<DistrictIncident>?
         var currentInc = DistrictIncident()
         allSuitableIncidents?.forEach {
@@ -73,7 +74,8 @@ class SecurityController(
     @GetMapping("/equipment")
     fun securityEquipment(model: Model, principal: Principal): String {
         val curUser = userRepository?.findByLogin(principal.name)!!
-        val curSecurity = securityEmployeeRepository.findById(curUser.id!!).get()
+        val curSecEmployee = employeeRepository?.findByUserId(curUser.id!!)
+        val curSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)!!
 
         val allChangeRequests = changeEquipmentRequestRepository.findAllByEmployee(curSecurity)
         var currentChangeRequest = ChangeEquipmentRequest()
@@ -110,10 +112,11 @@ class SecurityController(
         @ModelAttribute form: NewEquipmentForm, principal: Principal,
         redirect: RedirectAttributes
     ): String {
-        val user = userRepository?.findByLogin(principal.name)
+        val user = userRepository?.findByLogin(principal.name)!!
         val newRequest = Request().apply { this.status = RequestStatus.PENDING }
-        val currentSecurity = securityEmployeeRepository.findById(user?.id!!).get()
-        val allChangeRequests = changeEquipmentRequestRepository.findAllByEmployee(currentSecurity)
+        val curSecEmployee = employeeRepository?.findByUserId(user.id!!)
+        val curSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)!!
+        val allChangeRequests = changeEquipmentRequestRepository.findAllByEmployee(curSecurity)
 
         allChangeRequests?.forEach {
             if (it.request!!.status == RequestStatus.PENDING) {
@@ -161,7 +164,7 @@ class SecurityController(
             existingTransport = requestedTransport.get()
 
         when {
-            existingWeapon == currentSecurity.weapon && existingTransport == currentSecurity.transport -> {
+            existingWeapon == curSecurity.weapon && existingTransport == curSecurity.transport -> {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Requested equipment is the same as yours.")
                 return "redirect:/sec/equipment"
@@ -179,13 +182,13 @@ class SecurityController(
                 return "redirect:/sec/equipment"
             }
 
-            existingWeapon.requiredAccessLvl > currentSecurity.employee!!.level!! && existingWeapon.id != null -> {
+            existingWeapon.requiredAccessLvl > curSecurity.employee!!.level!! && existingWeapon.id != null -> {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Requested weapon's access level is higher than yours.")
                 return "redirect:/sec/equipment"
             }
 
-            existingTransport.requiredAccessLvl > currentSecurity.employee!!.level!! && existingTransport.id != null -> {
+            existingTransport.requiredAccessLvl > curSecurity.employee!!.level!! && existingTransport.id != null -> {
                 redirect.addFlashAttribute("form", form)
                 redirect.addFlashAttribute("error", "Requested transport's access level is higher than yours.")
                 return "redirect:/sec/equipment"
@@ -196,28 +199,28 @@ class SecurityController(
         when {
             requestedWeapon == null && requestedTransport == null -> {
                 changeEquipmentRequestRepository.save(
-                    ChangeEquipmentRequest(currentSecurity, requestedWeapon, requestedTransport)
+                    ChangeEquipmentRequest(curSecurity, requestedWeapon, requestedTransport)
                         .apply { this.request = newRequest }
                 )
             }
 
             requestedWeapon == null && requestedTransport != null -> {
                 changeEquipmentRequestRepository.save(
-                    ChangeEquipmentRequest(currentSecurity, requestedWeapon, existingTransport)
+                    ChangeEquipmentRequest(curSecurity, requestedWeapon, existingTransport)
                         .apply { this.request = newRequest }
                 )
             }
 
             requestedWeapon != null && requestedTransport == null -> {
                 changeEquipmentRequestRepository.save(
-                    ChangeEquipmentRequest(currentSecurity, existingWeapon, requestedTransport)
+                    ChangeEquipmentRequest(curSecurity, existingWeapon, requestedTransport)
                         .apply { this.request = newRequest }
                 )
             }
 
             requestedWeapon != null && requestedTransport != null -> {
                 changeEquipmentRequestRepository.save(
-                    ChangeEquipmentRequest(currentSecurity, existingWeapon, existingTransport)
+                    ChangeEquipmentRequest(curSecurity, existingWeapon, existingTransport)
                         .apply { this.request = newRequest }
                 )
             }
@@ -234,7 +237,8 @@ class SecurityController(
         principal: Principal
     ): String {
         val curUser = userRepository?.findByLogin(principal.name)!!
-        val curSecurity = securityEmployeeRepository.findById(curUser.id!!).get()
+        val curSecEmployee = employeeRepository?.findByUserId(curUser.id!!)
+        val curSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)!!
         val curEmployeeLevel = employeeRepository?.findByUserId(curUser.id!!)!!.level!!
         val possibleIncident = districtIncidentRepository.findById(id)
         if (!possibleIncident.isPresent) {
@@ -293,11 +297,11 @@ class SecurityController(
     }
 
     fun searchReportAccessError(incidentId: Long, principal: Principal): String? {
-        val user = userRepository?.findByLogin(principal.name)
-        val possibleSecurity = securityEmployeeRepository.findById(user?.id!!)
-        if (!possibleSecurity.isPresent)
-            return "You are not a security employee."
-        val currentSecurity = possibleSecurity.get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val curSecEmployee = employeeRepository?.findByUserId(user.id!!)
+        val possibleSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)
+            ?: return "You are not a security employee."
+        val currentSecurity = possibleSecurity
         val incident = districtIncidentRepository.findById(incidentId)
         if (!incident.isPresent)
             return "Incident with such id does not exist."
@@ -430,8 +434,9 @@ class SecurityController(
 
     @PostMapping("/withdrawChange")
     fun withdrawApplication(principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentSecurity = securityEmployeeRepository.findById(user?.id!!).get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val curSecEmployee = employeeRepository?.findByUserId(user.id!!)
+        val currentSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)!!
         val allChangeRequests = changeEquipmentRequestRepository.findAllByEmployee(currentSecurity)
 
         allChangeRequests?.forEach {
@@ -449,8 +454,9 @@ class SecurityController(
 
     @PostMapping("/withdrawParticipation")
     fun withdrawParticipation(principal: Principal, redirect: RedirectAttributes): String {
-        val user = userRepository?.findByLogin(principal.name)
-        val currentSecurity = securityEmployeeRepository.findById(user?.id!!).get()
+        val user = userRepository?.findByLogin(principal.name)!!
+        val curSecEmployee = employeeRepository?.findByUserId(user.id!!)
+        val currentSecurity = securityEmployeeRepository.findByEmployeeId(curSecEmployee?.id!!)!!
 
         val allSuitableIncidents = districtIncidentRepository
             .findAllByAvailablePlacesGreaterThanAndLevelFromLessThanEqualAndLevelToGreaterThanEqual(
