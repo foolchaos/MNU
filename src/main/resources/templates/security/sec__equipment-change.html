@@ -110,7 +110,7 @@
     </tr>
     </tbody>
     <tbody id="transport-tbody">
-    <tr class="transport-row hidden" th:each="transport : ${available_transport}" th:attr="data-id=${weapon.id}"
+    <tr class="transport-row hidden" th:each="transport : ${available_transport}" th:attr="data-id=${transport.id}"
         th:classappend="${current_security.transport.id == transport.id ? 'selected-row' : ''}">
         <td th:text="${transport.id}"></td>
         <td th:text="|${transport.type.name()=='LAND' ? 'Land transport' :
