@@ -2,14 +2,11 @@ package mnu.controller
 
 import mnu.EmailSender
 import mnu.model.entity.Prawn
-import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.Role
 import mnu.model.entity.User
 import mnu.model.entity.Weapon
-import mnu.model.entity.request.NewWeaponRequest
+import mnu.model.entity.request.*
 import mnu.model.entity.shop.ShoppingCartStatus
-import mnu.model.entity.request.PurchaseRequest
-import mnu.model.entity.request.VacancyApplicationRequest
 import mnu.model.form.PrawnRegistrationForm
 import mnu.repository.DistrictHouseRepository
 import mnu.repository.TransportRepository
@@ -37,6 +34,7 @@ class ManagerController (
     val newWeaponRequestRepository: NewWeaponRequestRepository,
     val vacancyApplicationRequestRepository: VacancyApplicationRequestRepository,
     val vacancyRepository: VacancyRepository,
+    val changeEquipmentRequestRepository: ChangeEquipmentRequestRepository,
     val emailSender: EmailSender
 ): ApplicationController() {
 
@@ -73,10 +71,30 @@ class ManagerController (
             }
         }
 
+        val equipmentChangeRequests = changeEquipmentRequestRepository.findAll()
+        val ecPendingRequests = ArrayList<ChangeEquipmentRequest>()
+        for (i in 0 until pendingRequests!!.size) {
+            for (j in 0 until equipmentChangeRequests.size) {
+                if (equipmentChangeRequests[j].request == pendingRequests[i])
+                    ecPendingRequests.add(equipmentChangeRequests[j])
+            }
+        }
 
+        val newWeaponRequests = newWeaponRequestRepository.findAll().toList()
+        val nwPendingRequests = ArrayList<NewWeaponRequest>()
+        for (i in 0 until pendingRequests.size) {
+            for (j in 0 until newWeaponRequests.size) {
+                if (newWeaponRequests[j].request == pendingRequests[i] &&
+                    (newWeaponRequests[j].user!!.role == Role.SECURITY || newWeaponRequests[j].user!!.role == Role.SCIENTIST)
+                )
+                    nwPendingRequests.add(newWeaponRequests[j])
+            }
+        }
 
-        model.addAttribute("purch_count", pPendingRequests.size)
+        model.addAttribute("eq_change_count", ecPendingRequests.size)
+        model.addAttribute("new_weap_count", nwPendingRequests.size)
         model.addAttribute("vac_appl_count", vaPendingRequests.size)
+        model.addAttribute("purch_count", pPendingRequests.size)
         return "managers/manager__main.html"
     }
 

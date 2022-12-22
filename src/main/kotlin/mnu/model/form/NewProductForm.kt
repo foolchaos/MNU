@@ -5,5 +5,6 @@ data class NewProductForm(
     val type: String = "",
     val description: String = "",
     val price: String = "",
-    val accessLvl: String = ""
+    val accessLvl: String = "",
+    val quantity: String = ""
 )

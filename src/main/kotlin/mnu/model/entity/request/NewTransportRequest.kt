@@ -17,7 +17,7 @@ class NewTransportRequest(
     @Min(0) var price: Double = 0.0,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
     var client: Client? = null
 ) : BaseEntity<Long>() {
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])

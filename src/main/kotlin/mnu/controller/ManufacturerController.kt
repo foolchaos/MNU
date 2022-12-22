@@ -164,7 +164,7 @@ class ManufacturerController (
                         return "redirect:/manufacturer/newProduct"
                     }
                 }
-                NewTransportRequest(form.name, type, form.description, 0, form.accessLvl.toInt(), form.price.toDouble(), manufacturer)
+                NewTransportRequest(form.name, type, form.description, form.quantity.toLong(), form.accessLvl.toInt(), form.price.toDouble(), manufacturer)
             }
             else -> {
                 val type = when (productType) {
@@ -181,7 +181,7 @@ class ManufacturerController (
                         return "redirect:/manufacturer/newProduct"
                     }
                 }
-                NewWeaponRequest(form.name, type, form.description, 0, form.accessLvl.toInt(), form.price.toDouble(), user)
+                NewWeaponRequest(form.name, type, form.description, form.quantity.toLong(), form.accessLvl.toInt(), form.price.toDouble(), user)
             }
         }
 

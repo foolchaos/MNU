@@ -33,8 +33,7 @@
         Prawn vacancies
         <div class="notification-number" th:if="${new_vac_count > 0}" th:text="${new_vac_count}"></div>
     </a>
-    <!-- th:href="@{/admin/newWeapons}" -->
-    <a class="flex-column new-weapons grid-button button">
+    <a th:href="@{/admin/newWeapons}" class="flex-column new-weapons grid-button button">
         New weapons and transport
         <div class="notification-number" th:if="${new_prod_count > 0}" th:text="${new_prod_count}"></div>
     </a>
