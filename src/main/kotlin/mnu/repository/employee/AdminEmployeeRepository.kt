@@ -1,6 +1,7 @@
 package mnu.repository.employee
 
 import mnu.model.entity.employee.AdminEmployee
+import mnu.model.entity.employee.ManagerEmployee
 import mnu.repository.BaseRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -50,5 +51,7 @@ interface AdministratorEmployeeRepository : BaseRepository<AdminEmployee, Long> 
                 " where (r.status = 'RESOLVED');", nativeQuery = true
     )
     fun allResolvedNewVacancyRequests(): Long
+
+    fun findByEmployeeId(employeeId: Long): AdminEmployee?
 
 }
