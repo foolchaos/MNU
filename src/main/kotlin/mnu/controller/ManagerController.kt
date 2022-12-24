@@ -13,6 +13,7 @@ import mnu.repository.TransportRepository
 import mnu.repository.VacancyRepository
 import mnu.repository.WeaponRepository
 import mnu.repository.employee.ManagerEmployeeRepository
+import mnu.repository.employee.SecurityEmployeeRepository
 import mnu.repository.request.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
@@ -35,6 +36,7 @@ class ManagerController (
     val vacancyApplicationRequestRepository: VacancyApplicationRequestRepository,
     val vacancyRepository: VacancyRepository,
     val changeEquipmentRequestRepository: ChangeEquipmentRequestRepository,
+    val securityEmployeeRepository: SecurityEmployeeRepository,
     val emailSender: EmailSender
 ): ApplicationController() {
 
@@ -657,6 +659,137 @@ class ManagerController (
         } else {
             redirect.addFlashAttribute("error", error)
             "redirect:/man/jobApplications"
+        }
+    }
+
+    fun newEquipmentChoiceError(newEquipmentRequestId: Long, principal: Principal): String? {
+        val request = changeEquipmentRequestRepository.findById(newEquipmentRequestId)
+        if (!request.isPresent)
+            return "Request with such id does not exist."
+        return null
+    }
+
+    @GetMapping("/newEquipment")
+    fun manNewEquipment(principal: Principal, model: Model) : String {
+        val equipmentChangeRequests = changeEquipmentRequestRepository.findAll()
+        val validEqChRequests = ArrayList<ChangeEquipmentRequest>()
+        equipmentChangeRequests.forEach {
+            if(it.request!!.status == RequestStatus.PENDING)
+                validEqChRequests.add(it)
+        }
+        model.addAttribute("requests", validEqChRequests)
+        return "managers/manager__equipment-change.html"
+    }
+
+    @PostMapping("/acceptNewEquipment/{id}")
+    fun acceptNewEquipment(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val currentManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
+
+        val error = newEquipmentChoiceError(id, principal)
+        return if (error == null) {
+            val checkedRequest = changeEquipmentRequestRepository.findById(id).get()
+
+            if (checkedRequest.request!!.status != RequestStatus.PENDING) {
+                redirect.addFlashAttribute("error", "Request has already been handled.")
+                "redirect:/man/newEquipment"
+            } else {
+                when {
+                    checkedRequest.weapon != null && checkedRequest.weapon?.quantity!! == 0L -> {
+                        checkedRequest.request!!.apply {
+                            this.statusDate = LocalDateTime.now()
+                            this.status = RequestStatus.REJECTED
+                            this.resolver = currentManager.employee
+                        }
+                        changeEquipmentRequestRepository.save(checkedRequest)
+                        redirect.addFlashAttribute("error", "Weapon is out of stock, request cannot be satisfied.")
+                        return "redirect:/man/newEquipment"
+                    }
+                    checkedRequest.transport != null && checkedRequest.transport?.quantity!! == 0L -> {
+                        checkedRequest.request!!.apply {
+                            this.statusDate = LocalDateTime.now()
+                            this.status = RequestStatus.REJECTED
+                            this.resolver = currentManager.employee
+                        }
+                        changeEquipmentRequestRepository.save(checkedRequest)
+                        redirect.addFlashAttribute("error", "Transport is out of stock, request cannot be satisfied.")
+                        return "redirect:/man/newEquipment"
+                    }
+                }
+
+                val securityEmployee = checkedRequest.employee!!
+
+                val employeeLastWeapon = securityEmployee.weapon
+                val employeeLastTransport = securityEmployee.transport
+                if (employeeLastWeapon != null) {
+                    employeeLastWeapon.quantity++
+                    weaponRepository.save(employeeLastWeapon)
+                }
+                if (employeeLastTransport != null) {
+                    employeeLastTransport.quantity++
+                    transportRepository.save(employeeLastTransport)
+                }
+
+                val employeeNewWeapon = checkedRequest.weapon
+                val employeeNewTransport = checkedRequest.transport
+                if (employeeNewWeapon != null) {
+                    employeeNewWeapon.quantity--
+                    weaponRepository.save(employeeNewWeapon)
+                }
+                if (employeeNewTransport != null) {
+                    employeeNewTransport.quantity--
+                    transportRepository.save(employeeNewTransport)
+                }
+
+                securityEmployee.weapon = checkedRequest.weapon
+                securityEmployee.transport = checkedRequest.transport
+
+                checkedRequest.request!!.apply {
+                    this.statusDate = LocalDateTime.now()
+                    this.status = RequestStatus.ACCEPTED
+                    this.resolver = currentManager.employee
+                }
+                securityEmployeeRepository.save(securityEmployee)
+                changeEquipmentRequestRepository.save(checkedRequest)
+                redirect.addFlashAttribute("status", "Request accepted.")
+                "redirect:/man/newEquipment"
+            }
+
+        } else {
+            redirect.addFlashAttribute("error", error)
+            "redirect:/man/newEquipment"
+        }
+    }
+
+    @PostMapping("/rejectNewEquipment/{id}")
+    fun rejectNewEquipment(@PathVariable id: Long, principal: Principal, redirect: RedirectAttributes): String {
+        val user = userRepository?.findByLogin(principal.name)!!
+        val man = employeeRepository?.findByUserId(user.id!!)
+        val currentManager = managerEmployeeRepository.findByEmployeeId(man?.id!!)!!
+
+        val error = newEquipmentChoiceError(id, principal)
+        return if (error == null) {
+            val checkedRequest = changeEquipmentRequestRepository.findById(id).get()
+
+            if (checkedRequest.request!!.status != RequestStatus.PENDING) {
+                redirect.addFlashAttribute("error", "Request has already been handled.")
+                "redirect:/man/newEquipment"
+            } else {
+                checkedRequest.request!!.apply {
+                    this.statusDate = LocalDateTime.now()
+                    this.status = RequestStatus.REJECTED
+                    this.resolver = currentManager.employee
+                }
+                changeEquipmentRequestRepository.save(checkedRequest)
+
+                redirect.addFlashAttribute("status", "Request rejected.")
+                "redirect:/man/newEquipment"
+            }
+
+        } else {
+            redirect.addFlashAttribute("error", error)
+            "redirect:/man/newEquipment"
         }
     }
 

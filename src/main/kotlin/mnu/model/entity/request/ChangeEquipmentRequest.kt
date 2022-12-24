@@ -10,7 +10,7 @@ import javax.persistence.*
 @Table(name = "change_equipment_requests")
 class ChangeEquipmentRequest(
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "requester_id", referencedColumnName = "employee_id")
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
     var employee: SecurityEmployee? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
