@@ -34,11 +34,22 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("org.thymeleaf.extras:thymeleaf-extras-java8time")
     implementation("org.postgresql:postgresql")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(module = "junit")
+        exclude(group = "org.mockito", module = "mockito-core")
+        exclude(group = "org.mockito", module = "mockito-junit-jupiter")
+    }
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
+    testImplementation("io.mockk:mockk:1.13.3")
+    testImplementation("com.ninja-squad:springmockk:3.0.1")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<KotlinCompile> {
