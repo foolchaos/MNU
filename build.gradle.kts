@@ -44,12 +44,17 @@ dependencies {
         exclude(group = "org.mockito", module = "mockito-core")
         exclude(group = "org.mockito", module = "mockito-junit-jupiter")
     }
+    testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     testImplementation("io.mockk:mockk:1.13.3")
     testImplementation("com.ninja-squad:springmockk:3.0.1")
     testImplementation("org.springframework.security:spring-security-test")
+
+    testImplementation("org.seleniumhq.selenium:selenium-java:3.141.59")
+    testImplementation("io.github.bonigarcia:webdrivermanager:5.3.1")
+
 }
 
 tasks.withType<KotlinCompile> {
