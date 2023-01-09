@@ -7,8 +7,10 @@ import io.mockk.every
 import mnu.controller.ManufacturerController
 import mnu.model.entity.Role
 import mnu.model.entity.User
+import mnu.model.entity.request.NewVacancyRequest
 import mnu.model.entity.shop.ShoppingCartItem
 import mnu.model.entity.shop.ShoppingCartStatus
+import mnu.model.form.NewVacancyForm
 import mnu.repository.TransportRepository
 import mnu.repository.UserRepository
 import mnu.repository.WeaponRepository
@@ -66,6 +68,11 @@ class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
 
     private val testManufacturer: User = User(login = "rogomanuf", role = Role.MANUFACTURER)
 
+    private val testNewValidVacancyRequest: NewVacancyRequest = NewVacancyRequest(
+        title = "test vac", requiredKarma = 5,
+        salary = 1.0, vacantPlaces = 5, workHoursPerWeek = 10
+    )
+
     @BeforeEach
     fun setUp() {
         every { mockPrincipal.name } returns testManufacturer.login
@@ -91,4 +98,22 @@ class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
             .andExpect(status().isOk)
             .andExpect(model().attribute("items", emptyCartArr))
     }
+
+    @WithMockUser(value = "rogomanuf")
+    @Test
+    fun `Check that add new valid vacancy POST returns 200 OK and returns form`() {
+        every { newVacancyRequestRepository.save(testNewValidVacancyRequest) } returns testNewValidVacancyRequest
+        val newVacancyForm = NewVacancyForm(
+            title = "test vac", requiredKarma = "5",
+            salary = "1.0", vacantPlaces = "5", workHoursPerWeek = "10"
+        )
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/manufacturer/newVacancy")
+                .sessionAttr("form", newVacancyForm)
+                .principal(mockPrincipal)
+        )
+            .andExpect(status().isOk)
+    }
+
 }
