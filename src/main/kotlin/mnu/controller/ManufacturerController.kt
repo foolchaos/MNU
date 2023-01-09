@@ -203,7 +203,7 @@ class ManufacturerController (
         if (form.title == "" || form.salary == "" || form.requiredKarma == "" || form.workHoursPerWeek == "" || form.vacantPlaces == "") {
             redirect.addFlashAttribute("form", form)
             redirect.addFlashAttribute("error", "One of the fields isn't filled.")
-            return "redirect:/manufacturer/newVacancies"
+            return "redirect:/manufacturer/newVacancy"
         }
         val newVacancyRequest =
             NewVacancyRequest(form.title, form.salary.toDouble(), form.requiredKarma.toLong(),

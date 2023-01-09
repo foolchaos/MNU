@@ -2,15 +2,21 @@ package mnu.unit
 
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.clearAllMocks
-import io.mockk.mockk
 import io.mockk.every
+import io.mockk.mockk
+import mnu.config.SecurityConfig
 import mnu.controller.ManufacturerController
+import mnu.model.entity.Client
+import mnu.model.entity.ClientType
 import mnu.model.entity.Role
 import mnu.model.entity.User
 import mnu.model.entity.request.NewVacancyRequest
+import mnu.model.entity.request.Request
+import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.shop.ShoppingCartItem
 import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.form.NewVacancyForm
+import mnu.repository.ClientRepository
 import mnu.repository.TransportRepository
 import mnu.repository.UserRepository
 import mnu.repository.WeaponRepository
@@ -24,19 +30,26 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.security.Principal
+import javax.sql.DataSource
 
 
 @WebMvcTest(controllers = [ManufacturerController::class])
+@AutoConfigureMockMvc(addFilters = false)
+@ContextConfiguration(classes = [SecurityConfig::class])
 @Import(ManufacturerController::class)
-class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
+class ManufacturerControllerTest(@Autowired var mockMvc: MockMvc) {
+    @MockkBean
+    lateinit var dataSource: DataSource
+
     @MockkBean
     lateinit var shoppingCartItemRepository: ShoppingCartItemRepository
 
@@ -62,21 +75,22 @@ class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
     lateinit var weaponRepository: WeaponRepository
 
     @MockkBean
+    lateinit var clientRepository: ClientRepository
+
+    @MockkBean
     lateinit var userRepository: UserRepository
 
     private val mockPrincipal: Principal = mockk()
 
-    private val testManufacturer: User = User(login = "rogomanuf", role = Role.MANUFACTURER)
-
-    private val testNewValidVacancyRequest: NewVacancyRequest = NewVacancyRequest(
-        title = "test vac", requiredKarma = 5,
-        salary = 1.0, vacantPlaces = 5, workHoursPerWeek = 10
-    )
+    private val testManufacturerUser: User = User(login = "rogomanuf", role = Role.MANUFACTURER).apply { id = 313 }
+    private val testManufacturerClient: Client =
+        Client(name = "rogomanuf", email = "rogomanuf@rogomanuf.com", type = ClientType.MANUFACTURER).apply { id = 313 }
 
     @BeforeEach
     fun setUp() {
-        every { mockPrincipal.name } returns testManufacturer.login
-        every { userRepository.findByLogin(testManufacturer.login) } returns testManufacturer
+        every { mockPrincipal.name } returns testManufacturerUser.login
+        every { userRepository.findByLogin(testManufacturerUser.login) } returns testManufacturerUser
+        every { clientRepository.findByUserId(testManufacturerUser.id!!) } returns testManufacturerClient
     }
 
     @AfterEach
@@ -84,11 +98,16 @@ class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
         clearAllMocks()
     }
 
-    @WithMockUser(value = "rogomanuf")
+    @WithMockUser(value = "rogomanuf", roles = ["MANUFACTURER"])
     @Test
     fun `Check that cart page GET returns 200 OK and returns a new empty cart`() {
         val emptyCartArr = mutableListOf<ShoppingCartItem>()
-        every { shoppingCartRepository.findAllByUserAndStatus(testManufacturer, ShoppingCartStatus.CREATING) } returns null
+        every {
+            shoppingCartRepository.findAllByUserAndStatus(
+                testManufacturerUser,
+                ShoppingCartStatus.CREATING
+            )
+        } returns null
 
         mockMvc.perform(
             MockMvcRequestBuilders
@@ -99,21 +118,41 @@ class ManufacturerControllerTest(@Autowired val mockMvc: MockMvc) {
             .andExpect(model().attribute("items", emptyCartArr))
     }
 
-    @WithMockUser(value = "rogomanuf")
+    @WithMockUser(value = "rogomanuf", roles = ["MANUFACTURER"])
     @Test
     fun `Check that add new valid vacancy POST returns 200 OK and returns form`() {
-        every { newVacancyRequestRepository.save(testNewValidVacancyRequest) } returns testNewValidVacancyRequest
+        val newValidVacancyRequest = NewVacancyRequest(
+            title = "test vac", requiredKarma = 5L,
+            salary = 1.0, vacantPlaces = 5L, workHoursPerWeek = 10,
+            client = testManufacturerClient
+        )
         val newVacancyForm = NewVacancyForm(
             title = "test vac", requiredKarma = "5",
             salary = "1.0", vacantPlaces = "5", workHoursPerWeek = "10"
         )
+        every {
+            newVacancyRequestRepository.save(match {
+                it.title == newValidVacancyRequest.title
+                        && it.requiredKarma == newValidVacancyRequest.requiredKarma
+                        && it.salary == newValidVacancyRequest.salary
+                        && it.vacantPlaces == newValidVacancyRequest.vacantPlaces
+                        && it.workHoursPerWeek == newValidVacancyRequest.workHoursPerWeek
+                        && it.client == newValidVacancyRequest.client
+            })
+        } returns newValidVacancyRequest
+
         mockMvc.perform(
             MockMvcRequestBuilders
                 .post("/manufacturer/newVacancy")
-                .sessionAttr("form", newVacancyForm)
+                .param("title", newVacancyForm.title)
+                .param("requiredKarma", newVacancyForm.requiredKarma)
+                .param("salary", newVacancyForm.salary)
+                .param("vacantPlaces", newVacancyForm.vacantPlaces)
+                .param("workHoursPerWeek", newVacancyForm.workHoursPerWeek)
                 .principal(mockPrincipal)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isFound)
+            .andExpect(flash().attribute("status", "Request submitted. Await for administrator's decision."))
     }
 
 }
