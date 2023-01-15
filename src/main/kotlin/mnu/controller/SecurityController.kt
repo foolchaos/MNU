@@ -276,7 +276,9 @@ class SecurityController(
                 return "redirect:/sec/main"
             }
         }
-        incidentAssistants.add(securityEmployeeRepository.findById(curUser.id!!).get())
+        val curUserEmployee = employeeRepository?.findByUserId(curUser.id!!)
+        val currSecurityEmpl = securityEmployeeRepository.findByEmployeeId(curUserEmployee!!.id!!)
+        incidentAssistants.add(currSecurityEmpl!!)
 
         incident.apply {
             this.assistants = incidentAssistants

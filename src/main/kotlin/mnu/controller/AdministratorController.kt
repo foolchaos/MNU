@@ -1210,4 +1210,35 @@ class AdministratorController (
         }
     }
 
+    @PostMapping("/appointResolvers")
+    fun appointResolversForIncident(@ModelAttribute form: AppointResolversForm, redirect: RedirectAttributes): String {
+        val incident = districtIncidentRepository.findById(form.incidentId.toLong())
+        when {
+            form.incidentId == "" || form.securityNeeded == "" || form.levelFrom == "" || form.levelTo == "" -> {
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("error", "One of the fields is empty. Please fill all fields.")
+                return "redirect:/admin/district"
+            }
+            !incident.isPresent -> {
+                redirect.addFlashAttribute("form", form)
+                redirect.addFlashAttribute("error", "Such incident does not exist.")
+                return "redirect:/admin/district"
+            }
+        }
+
+        val newIncident = incident.get().apply {
+            this.availablePlaces = form.securityNeeded.toLong()
+            this.levelFrom = form.levelFrom.toInt()
+            this.levelTo = form.levelTo.toInt()
+        }
+
+        districtIncidentRepository.save(newIncident)
+        redirect.addFlashAttribute("form", form)
+        redirect.addFlashAttribute(
+            "status",
+            "Success. All security employees will be notified of the occurred incident."
+        )
+        return "redirect:/admin/district"
+    }
+
 }

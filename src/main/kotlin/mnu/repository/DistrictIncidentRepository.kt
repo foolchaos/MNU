@@ -17,8 +17,8 @@ interface DistrictIncidentRepository : BaseRepository<DistrictIncident, Long> {
 
     fun findAllByAvailablePlacesGreaterThanAndLevelFromLessThanEqualAndLevelToGreaterThanEqual(
         availablePlaces: Long,
-        level1: Int,
-        level2: Int
+        levelFrom: Int,
+        levelTo: Int
     ): List<DistrictIncident>?
 
     fun findAllByAppearanceTimeAfterAndAppearanceTimeBefore(
