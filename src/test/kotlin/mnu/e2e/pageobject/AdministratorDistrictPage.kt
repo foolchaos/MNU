@@ -2,6 +2,7 @@ package mnu.e2e.pageobject
 
 import mnu.webdriverwrapper.element.InputField
 import mnu.webdriverwrapper.element.OmniElement
+import mnu.webdriverwrapper.element.TextContainer
 
 class AdministratorDistrictPage {
     private val menuContainer: OmniElement = OmniElement("//*[@class='grid']")
@@ -10,6 +11,8 @@ class AdministratorDistrictPage {
     private val incidentSecurityLvlFromInput: InputField = InputField("//*[@class='grid']//input[@id='levelFrom']")
     private val incidentSecurityLvlToInput: InputField = InputField("//*[@class='grid']//input[@id='levelTo']")
     private val submitBtn: OmniElement = OmniElement("//*[@class='grid']//input[contains(@class, 'button')]")
+    private val backBtn: OmniElement = OmniElement("//*[@class='grid']//*[contains(@href, 'main')]")
+    private val textPopupContainer: TextContainer = TextContainer("//*[contains(@class, 'flash_success') and not(@id='message')]")
 
     fun isLoaded(): Boolean = menuContainer.isVisible()
 
@@ -31,5 +34,13 @@ class AdministratorDistrictPage {
 
     fun clickSubmitBtn() {
         submitBtn.click()
+    }
+
+    fun getPopupText(): String? {
+        return textPopupContainer.getText()
+    }
+
+    fun clickBackBtn() {
+        backBtn.click()
     }
 }
