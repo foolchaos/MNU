@@ -8,6 +8,8 @@ class AdministratorMainPage {
         OmniElement("//*[@class='grid']//*[contains(@class, 'experiments-articles')]")
     private val districtIncidentsBtn: OmniElement =
         OmniElement("//*[@class='grid']//*[contains(@class, 'district')]")
+    private val profileBtn: OmniElement = OmniElement("//*[@class='header']//*[contains(@href, 'profile')]")
+
 
     fun isLoaded(): Boolean {
         return menuContainer.isVisible()
@@ -19,5 +21,9 @@ class AdministratorMainPage {
 
     fun clickDistrictIncidentBtn() {
         districtIncidentsBtn.click()
+    }
+
+    fun clickProfileBtn() {
+        profileBtn.click()
     }
 }
