@@ -102,19 +102,12 @@ class PurchaseRequestFlowTest {
             "Manager's purchase requests are not visible."
         )
 
-        // 9. Check that the purchase request was created and accept it
+        // 9. Check that the purchase request was created and reject it
         assertTrue(
             managerPurchaseRequestsPage.isClientRequestByWeaponPresent(CLIENT_CREDENTIAL, WARE_NAME),
             "The request has not been created."
         )
         managerPurchaseRequestsPage.rejectRequestByClientAndWeapon(CLIENT_CREDENTIAL, WARE_NAME)
-
-        // todo потом разберусь
-//        assertEquals(
-//            "Rejected",
-//            managerPurchaseRequestsPage.getRequestPopupByClientAndWeapon(CLIENT_CREDENTIAL, WARE_NAME),
-//            "The request was not actually rejected."
-//        )
     }
 
     private fun loginAsUser(username: String, password: String) {
