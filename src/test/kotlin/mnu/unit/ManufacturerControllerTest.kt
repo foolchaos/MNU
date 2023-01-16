@@ -10,11 +10,7 @@ import mnu.model.entity.Client
 import mnu.model.entity.ClientType
 import mnu.model.entity.Role
 import mnu.model.entity.User
-import mnu.model.entity.Weapon
-import mnu.model.entity.WeaponType
 import mnu.model.entity.request.NewVacancyRequest
-import mnu.model.entity.request.Request
-import mnu.model.entity.request.RequestStatus
 import mnu.model.entity.shop.ShoppingCartItem
 import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.form.NewProductForm
@@ -36,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
-import org.springframework.data.domain.Sort
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
