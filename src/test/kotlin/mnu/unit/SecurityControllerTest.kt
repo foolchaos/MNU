@@ -8,6 +8,7 @@ import mnu.config.SecurityConfig
 import mnu.controller.SecurityController
 import mnu.model.entity.*
 import mnu.model.entity.employee.Employee
+import mnu.model.entity.employee.PersonStatus
 import mnu.model.entity.employee.SecurityEmployee
 import mnu.model.entity.request.ChangeEquipmentRequest
 import mnu.model.entity.request.NewWeaponRequest
@@ -78,11 +79,41 @@ class SecurityControllerTest(@Autowired var mockMvc: MockMvc) {
     private val mockPrincipal: Principal = mockk()
 
     private val testSecurityUser: User = User(login = "rogosec", role = Role.SECURITY).apply { id = 313 }
+    private val testSecurityEmployee: Employee =
+        Employee(name = "rogosec", level = 5, salary = 313, position = "rogosec").apply {
+            id = 313
+            user = testSecurityUser
+            status = PersonStatus.WORKING
+        }
+    private val testSecuritySecurityEmployee: SecurityEmployee =
+        SecurityEmployee().apply { employee = testSecurityEmployee }
+    private val testWeapon: Weapon = Weapon(
+        name = "knife",
+        type = WeaponType.MELEE,
+        description = "kool knife",
+        price = 2.0,
+        requiredAccessLvl = 4
+    ).apply {
+        id = 313
+        quantity = 5
+    }
+    private val testTransport: Transport = Transport(
+        name = "car",
+        type = TransportType.LAND,
+        description = "cool car",
+        price = 2.0,
+        requiredAccessLvl = 4
+    ).apply {
+        id = 313
+        quantity = 5
+    }
 
     @BeforeEach
     fun setUp() {
         every { mockPrincipal.name } returns testSecurityUser.login
         every { userRepository.findByLogin(testSecurityUser.login) } returns testSecurityUser
+        every { employeeRepository.findByUserId(testSecurityUser.id!!) } returns testSecurityEmployee
+        every { securityEmployeeRepository.findByEmployeeId(testSecurityEmployee.id!!) } returns testSecuritySecurityEmployee
     }
 
     @AfterEach
@@ -92,154 +123,107 @@ class SecurityControllerTest(@Autowired var mockMvc: MockMvc) {
 
     @WithMockUser(value = "rogosec", roles = ["SECURITY"])
     @Test
-    fun `securityEquipment OK`() {
-        val employee = Employee(name = "equipment.test.security")
-        employee.id = 1L
-        employee.level = 5
+    fun `Check that security equipment GET returns 200 OK and lists of empty data`() {
+        val testRequest = Request().apply { status = RequestStatus.PENDING }
+        val testEquipmentRequest = ChangeEquipmentRequest().apply { request = testRequest }
 
+        val equipmentRequests = listOf(testEquipmentRequest)
         every {
-            employeeRepository.findByUserId(testSecurityUser.id!!)
-        } returns employee
-
-        val security = SecurityEmployee()
-        security.employee = employee
-
-        every {
-            securityEmployeeRepository.findByEmployeeId(employee.id!!)
-        } returns security
-
-        val request = Request()
-        request.status = RequestStatus.PENDING
-
-        val equipment = ChangeEquipmentRequest()
-        equipment.request = request
-
-        val equipments = listOf(equipment)
-
-        every {
-            changeEquipmentRequestRepository.findAllByEmployee(security)
-        } returns equipments
+            changeEquipmentRequestRepository.findAllByEmployee(testSecuritySecurityEmployee)
+        } returns equipmentRequests
 
         val weapons = ArrayList<Weapon>()
-
-        every {
-            weaponRepository.findAllByRequiredAccessLvlLessThanEqualAndQuantityGreaterThanOrderByIdAsc(
-                security.employee!!.level!!, 0
-            )
-        } returns weapons
-
         val transports = ArrayList<Transport>()
 
         every {
+            weaponRepository.findAllByRequiredAccessLvlLessThanEqualAndQuantityGreaterThanOrderByIdAsc(
+                testSecuritySecurityEmployee.employee!!.level!!, 0
+            )
+        } returns weapons
+        every {
             transportRepository.findAllByRequiredAccessLvlLessThanEqualAndQuantityGreaterThanOrderByIdAsc(
-                security.employee!!.level!!, 0
+                testSecuritySecurityEmployee.employee!!.level!!, 0
             )
         } returns transports
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/sec/equipment").principal(mockPrincipal)
         ).andExpect(status().isOk)
-            .andExpect(model().attribute("current_security", security))
-            .andExpect(model().attribute("current_request", equipment))
+            .andExpect(model().attribute("current_security", testSecuritySecurityEmployee))
+            .andExpect(model().attribute("current_request", testEquipmentRequest))
             .andExpect(model().attribute("available_weapons", weapons))
             .andExpect(model().attribute("available_transport", transports))
             .andExpect(model().attribute("form", NewEquipmentForm()))
     }
 
-    /*    @WithMockUser(value = "rogosec", roles = ["SECURITY"])
-        @Test
-        fun `requestNewEquipment OK`() {
-            val employee = Employee(name = "equipment.test.security")
-            employee.id = 1L
-            employee.level = 5
+    @WithMockUser(value = "rogosec", roles = ["SECURITY"])
+    @Test
+    fun `Check that valid change equipment request POST returns 302 and returns status`() {
+        val equipmentRequests = mutableListOf<ChangeEquipmentRequest>()
+        every {
+            changeEquipmentRequestRepository.findAllByEmployee(testSecuritySecurityEmployee)
+        } returns equipmentRequests
 
-            every {
-                employeeRepository.findByUserId(testSecurityUser.id!!)
-            } returns employee
+        every {
+            weaponRepository.findById(testWeapon.id!!)
+        } returns Optional.of(testWeapon)
+        every {
+            transportRepository.findById(testTransport.id!!)
+        } returns Optional.of(testTransport)
 
-            val security = SecurityEmployee()
-            security.employee = employee
+        val testRequest = Request().apply {
+            id = 313
+            status = RequestStatus.PENDING
+        }
+        val testEquipmentRequest = ChangeEquipmentRequest().apply {
+            id = 313
+            request = testRequest
+            weapon = testWeapon
+            transport = testTransport
+            employee = testSecuritySecurityEmployee
+        }
 
-            every {
-                securityEmployeeRepository.findByEmployeeId(employee.id!!)
-            } returns security
+        every {
+            requestRepository.save(match {
+                it.status == testRequest.status
+            })
+        } returns testRequest
+        every {
+            changeEquipmentRequestRepository.save(match {
+                it.weapon == testEquipmentRequest.weapon
+                        && it.transport == testEquipmentRequest.transport
+                        && it.employee == testEquipmentRequest.employee
+            })
+        } returns testEquipmentRequest
 
-            val equipment = ChangeEquipmentRequest()
-            equipment.request = Request()
-
-            val equipments = listOf(equipment)
-
-            every {
-                changeEquipmentRequestRepository.findAllByEmployee(security)
-            } returns equipments
-
-            val newEquipmentForm = NewEquipmentForm(weaponId = null, transportId = null)
-
-            val weapon = Weapon()
-
-            every {
-                weaponRepository.findById(0L)
-            } returns Optional.of(weapon)
-
-            val transport = Transport()
-
-            every {
-                transportRepository.findById(0L)
-            } returns Optional.of(transport)
-
-            val request = Request().apply { this.status = RequestStatus.PENDING }
-            request.id = null
-
-            every {
-                requestRepository.save(Request())
-            } returns request
-
-            val changeEquipmentRequest = ChangeEquipmentRequest()
-
-            every {
-                changeEquipmentRequestRepository.save(changeEquipmentRequest)
-            } returns changeEquipmentRequest
-
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/sec/equipment")
-                    .sessionAttr("form", newEquipmentForm)
-                    .principal(mockPrincipal)
-            ).andExpect(status().isFound)
-                .andExpect(flash().attribute("status", "Request sent. Wait for supervisor's decision."))
-        }*/
+        val newEquipmentForm = NewEquipmentForm(weaponId = testWeapon.id, transportId = testTransport.id)
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/sec/equipment")
+                .principal(mockPrincipal)
+                .param("weaponId", newEquipmentForm.weaponId.toString())
+                .param("transportId", newEquipmentForm.transportId.toString())
+        ).andExpect(status().isFound)
+            .andExpect(flash().attribute("status", "Request sent. Wait for supervisor's decision."))
+    }
 
     @WithMockUser(value = "rogosec", roles = ["SECURITY"])
     @Test
-    fun `acceptIncidentParticipation OK`() {
-        val id = 1L
-
-        val employee = Employee(name = "equipment.test.security")
-        employee.id = 1L
-        employee.level = 5
-
+    fun `Check that applying for incident resolution POST returns 302 and status`() {
+        val districtIncident = DistrictIncident().apply {
+            id = 313
+            assistants = mutableListOf(SecurityEmployee())
+            levelFrom = 1
+            levelTo = 10
+        }
         every {
-            employeeRepository.findByUserId(testSecurityUser.id!!)
-        } returns employee
-
-        val security = SecurityEmployee()
-        security.employee = employee
-
-        every {
-            securityEmployeeRepository.findByEmployeeId(employee.id!!)
-        } returns security
-
-        val districtIncident = DistrictIncident()
-        districtIncident.assistants = mutableListOf(SecurityEmployee())
-
-        every {
-            districtIncidentRepository.findById(id)
+            districtIncidentRepository.findById(districtIncident.id!!)
         } returns Optional.of(districtIncident)
 
         val districtIncidents = listOf(districtIncident)
-
         every {
             districtIncidentRepository.findAllByAvailablePlacesGreaterThanAndLevelFromLessThanEqualAndLevelToGreaterThanEqual(
-                0, employee.level!!, employee.level!!
+                0, testSecurityEmployee.level!!, testSecurityEmployee.level!!
             )
         } returns districtIncidents
 
@@ -250,82 +234,84 @@ class SecurityControllerTest(@Autowired var mockMvc: MockMvc) {
         } returns districtIncident
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/sec/incident/{id}", id).principal(mockPrincipal)
+            MockMvcRequestBuilders.post("/sec/incident/{id}", districtIncident.id)
+                .principal(mockPrincipal)
         ).andExpect(status().isFound)
             .andExpect(flash().attribute("status", "You were appointed to the incident."))
     }
 
-    /*@WithMockUser(value = "rogosec", roles = ["SECURITY"])
+    @WithMockUser(value = "rogosec", roles = ["SECURITY"])
     @Test
-    fun `addSearchReport OK`() {
+    fun `Check that adding report for an incident POST returns 302 and status`() {
         val newSearchForm = NewSearchForm(
             isNew = "2",
-            incidentId = "100",
-            result = "addSearchReport.test.security.result",
+            incidentId = "313",
+            result = "testResult",
             weaponType = "pistol",
             weaponLevel = "5",
             weaponQuantity2 = "100",
-            weaponPrice = "100"
+            weaponPrice = "100.0"
         )
 
-        val employee = Employee(name = "equipment.test.security")
-        employee.id = 1000L
+        val districtIncident = DistrictIncident(description = "everything is bad").apply {
+            id = 313
+            assistants = mutableListOf(testSecuritySecurityEmployee)
+        }
 
         every {
-            employeeRepository.findByUserId(testSecurityUser.id!!)
-        } returns employee
-
-        val security = SecurityEmployee()
-        security.employee = employee
-
-        every {
-            securityEmployeeRepository.findByEmployeeId(employee.id!!)
-        } returns security
-
-        val districtIncident = DistrictIncident()
-        districtIncident.assistants = mutableListOf(security)
-
-        every {
-            districtIncidentRepository.findById(100L)
+            districtIncidentRepository.findById(districtIncident.id!!)
         } returns Optional.of(districtIncident)
 
+        districtIncident.apply {
+            description += "\n\n${newSearchForm.result}"
+            dangerLevel = 0
+            levelFrom = 0
+            levelTo = 0
+        }
+
         every {
-            districtIncidentRepository.save(districtIncident.apply {
-                this.description += "\n\n${newSearchForm.result}"
-                this.dangerLevel = 0
-                this.levelFrom = 0
-                this.levelTo = 0
+            districtIncidentRepository.save(match {
+                it.assistants == districtIncident.assistants
+                        && it.description == districtIncident.description
+                        && it.dangerLevel == districtIncident.dangerLevel
+                        && it.levelFrom == districtIncident.levelFrom
+                        && it.levelTo == districtIncident.levelTo
             })
         } returns districtIncident
 
         val newRequest = Request().apply { this.status = RequestStatus.PENDING }
-
         val newWeaponRequest = NewWeaponRequest(
-            newSearchForm.weaponName,
-            WeaponType.PISTOL,
-            newSearchForm.weaponDescription,
-            newSearchForm.weaponQuantity2.toLong(),
-            newSearchForm.weaponLevel.toInt(),
-            newSearchForm.weaponPrice.toDouble(),
-            testSecurityUser
-        )
-        newWeaponRequest.request = newRequest
+            name = newSearchForm.weaponName,
+            type = WeaponType.PISTOL,
+            description = newSearchForm.weaponDescription,
+            quantity = newSearchForm.weaponQuantity2.toLong(),
+            requiredAccessLvl =  newSearchForm.weaponLevel.toInt(),
+            price = newSearchForm.weaponPrice.toDouble(),
+            user = testSecurityUser
+        ).apply { request = newRequest }
 
         every {
-            newWeaponRequestRepository.save(newWeaponRequest)
+            newWeaponRequestRepository.save(match {
+                it.name == newWeaponRequest.name
+                        && it.type == newWeaponRequest.type
+                        && it.description == newWeaponRequest.description
+                        && it.quantity == newWeaponRequest.quantity
+                        && it.requiredAccessLvl == newWeaponRequest.requiredAccessLvl
+                        && it.price == newWeaponRequest.price
+                        && it.user == newWeaponRequest.user
+            })
         } returns newWeaponRequest
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/sec/report")
-                .sessionAttr("form", newSearchForm)
-                .param("incidentId", "100")
-                .param("isNew", "2")
-                .param("weaponType", "pistol")
-                .param("weaponLevel", "5")
-                .param("weaponQuantity2", "100")
-                .param("weaponPrice", "10000")
+                .param("incidentId", newSearchForm.incidentId)
+                .param("isNew", newSearchForm.isNew)
+                .param("weaponType", newSearchForm.weaponType)
+                .param("weaponLevel", newSearchForm.weaponLevel)
+                .param("weaponQuantity2", newSearchForm.weaponQuantity2)
+                .param("weaponPrice", newSearchForm.weaponPrice)
                 .principal(mockPrincipal)
         ).andExpect(status().isFound)
-            .andExpect(flash().attribute("error", "Report submitted. Await for supervisor's decision."))
-    }*/
+            .andExpect(flash().attribute("status", "Report submitted. Await for supervisor's decision."))
+    }
 }

@@ -155,7 +155,6 @@ class SecurityController(
             }
         }
 
-
         var existingWeapon = Weapon()
         if (requestedWeapon != null)
             existingWeapon = requestedWeapon.get()

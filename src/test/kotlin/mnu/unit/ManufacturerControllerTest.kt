@@ -6,11 +6,9 @@ import io.mockk.every
 import io.mockk.mockk
 import mnu.config.SecurityConfig
 import mnu.controller.ManufacturerController
-import mnu.model.entity.Client
-import mnu.model.entity.ClientType
-import mnu.model.entity.Role
-import mnu.model.entity.User
+import mnu.model.entity.*
 import mnu.model.entity.request.NewVacancyRequest
+import mnu.model.entity.request.NewWeaponRequest
 import mnu.model.entity.shop.ShoppingCartItem
 import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.form.NewProductForm
@@ -32,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.Sort
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -143,26 +142,44 @@ class ManufacturerControllerTest(@Autowired var mockMvc: MockMvc) {
             .andExpect(model().attribute("form", newVacancyForm))
     }
 
-    /*@WithMockUser(value = "rogomanuf", roles = ["MANUFACTURER"])
+    @WithMockUser(value = "rogomanuf", roles = ["MANUFACTURER"])
     @Test
     fun `Check market filter`() {
-        val testMarketWeapon = Weapon(name = "knife", description = "kool knife", price = 2.0, )
-        every { weaponRepository.findAllByNameIgnoreCaseContainingAndType("knife",
-            WeaponType.MELEE, Sort.by(Sort.Direction.ASC, "price")) } returns listOf(testMarketWeapon)
+        val testMarketWeapon = Weapon(
+            name = "knife",
+            description = "kool knife",
+            price = 2.0,
+            type = WeaponType.MELEE
+        )
+        every {
+            weaponRepository.findAllByNameIgnoreCaseContainingAndType(
+                testMarketWeapon.name,
+                testMarketWeapon.type,
+                Sort.by(Sort.Direction.ASC, "price")
+            )
+        } returns listOf(testMarketWeapon)
+
+        every {
+            shoppingCartItemRepository.findAllByCartUserIdAndCartStatus(
+                testManufacturerUser.id!!,
+                ShoppingCartStatus.CREATING
+            )
+        } returns mutableListOf()
+
         mockMvc.perform(
             MockMvcRequestBuilders
                 .get("/manufacturer/market/weapon")
                 .principal(mockPrincipal)
-                .requestAttr("type", "melee")
-                .requestAttr("sort", "price_asc")
-                .requestAttr("name", "knife")
+                .param("type", "melee")
+                .param("sort", "price_asc")
+                .param("name", "knife")
         )
             .andExpect(model().attribute("items", listOf(testMarketWeapon)))
-    }*/
+    }
 
     @WithMockUser(value = "rogomanuf")
     @Test
-    fun `Check that add new valid vacancy POST returns 302 and returns form`() {
+    fun `Check that add new valid vacancy POST returns 302 and returns status`() {
         val newValidVacancyRequest = NewVacancyRequest(
             title = "test vac", requiredKarma = 5L,
             salary = 1.0, vacantPlaces = 5L, workHoursPerWeek = 10,
@@ -191,6 +208,53 @@ class ManufacturerControllerTest(@Autowired var mockMvc: MockMvc) {
                 .param("salary", newVacancyForm.salary)
                 .param("vacantPlaces", newVacancyForm.vacantPlaces)
                 .param("workHoursPerWeek", newVacancyForm.workHoursPerWeek)
+                .principal(mockPrincipal)
+        )
+            .andExpect(status().isFound)
+            .andExpect(flash().attribute("status", "Request submitted. Await for administrator's decision."))
+    }
+
+    @WithMockUser(value = "rogomanuf")
+    @Test
+    fun `Check that add new valid product POST returns 302 and returns status`() {
+        val newValidProductRequest = NewWeaponRequest(
+            name = "knife",
+            description = "kool knife",
+            type = WeaponType.MELEE,
+            price = 2.0,
+            requiredAccessLvl = 1,
+            quantity = 10,
+            user = testManufacturerUser
+        )
+        val newProductForm = NewProductForm(
+            name = "knife",
+            description = "kool knife",
+            type = "melee",
+            price = "2.0",
+            accessLvl = "1",
+            quantity = "10"
+        )
+        every {
+            newWeaponRequestRepository.save(match {
+                it.name == newValidProductRequest.name
+                        && it.description == newValidProductRequest.description
+                        && it.type == newValidProductRequest.type
+                        && it.price == newValidProductRequest.price
+                        && it.requiredAccessLvl == newValidProductRequest.requiredAccessLvl
+                        && it.quantity == newValidProductRequest.quantity
+                        && it.user == newValidProductRequest.user
+            })
+        } returns newValidProductRequest
+
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/manufacturer/newProduct")
+                .param("name", newProductForm.name)
+                .param("description", newProductForm.description)
+                .param("type", newProductForm.type)
+                .param("price", newProductForm.price)
+                .param("accessLvl", newProductForm.accessLvl)
+                .param("quantity", newProductForm.quantity)
                 .principal(mockPrincipal)
         )
             .andExpect(status().isFound)
