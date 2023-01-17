@@ -16,9 +16,9 @@ interface ScientistEmployeeRepository : BaseRepository<ScientistEmployee, Long> 
     fun getAssistants(examinatorLvl: Int): List<Assistant>?
 
     interface Assistant {
-        val id: Long;
-        val name: String;
-        val position: String;
+        val id: Long
+        val name: String
+        val position: String
         val level: Int
     }
 
