@@ -1,7 +1,9 @@
+#server:
+#  port: 58081
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/mnu
-    username: mnu
+    url: jdbc:postgresql://localhost:5432/mnu # studs
+    username: mnu # s244077
     password: mnu
     driver-class-name: org.postgresql.Driver
   mail:
