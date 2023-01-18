@@ -11,11 +11,11 @@ import mnu.model.entity.*
 import mnu.model.entity.employee.Employee
 import mnu.model.entity.employee.ManagerEmployee
 import mnu.model.entity.employee.PersonStatus
-import mnu.model.entity.request.PurchaseRequest
-import mnu.model.entity.request.Request
-import mnu.model.entity.request.RequestStatus
+import mnu.model.entity.employee.SecurityEmployee
+import mnu.model.entity.request.*
 import mnu.model.entity.shop.ShoppingCart
 import mnu.model.entity.shop.ShoppingCartItem
+import mnu.model.entity.shop.ShoppingCartStatus
 import mnu.model.form.PrawnRegistrationForm
 import mnu.repository.*
 import mnu.repository.employee.EmployeeRepository
@@ -96,12 +96,23 @@ class ManagerControllerTest(@Autowired var mockMvc: MockMvc) {
     private val mockPrincipal: Principal = mockk()
 
     private val testManagerUser: User = User(login = "rogomanager", role = Role.MANAGER).apply { id = 313 }
+    private val testSecurityUser: User = User(login = "rogomanager", role = Role.MANAGER).apply { id = 313 }
     private val testManagerEmployee: Employee =
         Employee(name = "rogomanager", level = 5, salary = 313, position = "rogomanager").apply {
             id = 313
             user = testManagerUser
             status = PersonStatus.WORKING
         }
+    private val testSecurityEmployee: Employee =
+        Employee(name = "rogosec", level = 5, salary = 313, position = "rogosec").apply {
+            id = 313
+            user = testSecurityUser
+            status = PersonStatus.WORKING
+        }
+    private val testSecuritySecurityEmployee: SecurityEmployee =
+        SecurityEmployee().apply { id = 313
+            employee = testSecurityEmployee
+            weapon = testWeapon}
     private val testPrawnUser: User =
         User(login = "test_prawn", password = "qwerty", role = Role.PRAWN).apply {
             id = 313
@@ -112,7 +123,7 @@ class ManagerControllerTest(@Autowired var mockMvc: MockMvc) {
         }
     private val testDistrictHouse: DistrictHouse = DistrictHouse(1,1)
     private val testManagerManagerEmployee: ManagerEmployee =
-        ManagerEmployee().apply { id=333
+        ManagerEmployee().apply { id=313
             employee = testManagerEmployee }
     private val testWeapon: Weapon = Weapon(
         name = "knife",
@@ -131,6 +142,31 @@ class ManagerControllerTest(@Autowired var mockMvc: MockMvc) {
         ShoppingCart(user = testPrawnUser, dateOfCreation = LocalDateTime.now()).apply { id = 3 }
     private val testPurchaseRequest: PurchaseRequest =
         PurchaseRequest(user = testPrawnUser, cart = testShoppingCart).apply {
+            id = 313
+            request = testRequest
+        }
+    private val testChangeEquipmentRequest: ChangeEquipmentRequest =
+        ChangeEquipmentRequest(employee =  testSecuritySecurityEmployee, weapon = testWeapon).apply {
+            id = 313
+            request = testRequest
+        }
+    private val testVacancy: Vacancy =
+        Vacancy().apply {
+            id = 313
+            vacantPlaces = 2
+        }
+    private val testNewWeaponRequest: NewWeaponRequest =
+        NewWeaponRequest(user = testPrawnUser).apply {
+            id = 313
+            quantity = testWeapon.quantity
+            requiredAccessLvl = testWeapon.requiredAccessLvl
+            description = testWeapon.description
+            name = testWeapon.name
+            type = testWeapon.type
+            request = testRequest
+        }
+    private val testVacancyApplicationRequest: VacancyApplicationRequest =
+        VacancyApplicationRequest(prawn = testPrawnPrawn, vacancy = testVacancy).apply {
             id = 313
             request = testRequest
         }
@@ -196,6 +232,124 @@ class ManagerControllerTest(@Autowired var mockMvc: MockMvc) {
                 .post("/man/acceptPurchaseRequest/313")
                 .principal(mockPrincipal)
         ).andExpect(MockMvcResultMatchers.status().isFound)
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that process new weapon request POST returns 302`() {
+        every { newWeaponRequestRepository.findById(313) } returns Optional.of(testNewWeaponRequest)
+        every {
+            newWeaponRequestRepository.save(match {
+                it.id == testNewWeaponRequest.id
+            })
+        } returns testNewWeaponRequest
+        every {
+            weaponRepository.save(match {
+                it.name == testNewWeaponRequest.name
+            })
+        } returns testWeapon
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/man/acceptNewWeapon/313")
+                .principal(mockPrincipal)
+        ).andExpect(MockMvcResultMatchers.status().isFound)
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that process equipment change request POST returns 302`() {
+        every { changeEquipmentRequestRepository.findById(testChangeEquipmentRequest.id!!) } returns Optional.of(testChangeEquipmentRequest)
+        every { weaponRepository.save(match{
+            it.name == testWeapon.name
+        }) } returns testWeapon
+        every { securityEmployeeRepository.save(match{
+            it.id == testSecuritySecurityEmployee.id
+        }) } returns testSecuritySecurityEmployee
+        every { changeEquipmentRequestRepository.save(match{
+            it.id == testChangeEquipmentRequest.id
+        }) } returns testChangeEquipmentRequest
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/man/acceptNewEquipment/313")
+                .principal(mockPrincipal)
+        ).andExpect(MockMvcResultMatchers.status().isFound)
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that process prawn job application request POST returns 302`() {
+        every { vacancyApplicationRequestRepository.findById(testVacancyApplicationRequest.id!!) } returns Optional.of(testVacancyApplicationRequest)
+        every { vacancyApplicationRequestRepository.save(match{
+            it.id == testVacancyApplicationRequest.id
+        }) } returns testVacancyApplicationRequest
+        every { vacancyRepository.save(match{
+            it.id == testVacancy.id
+        }) } returns testVacancy
+        every { prawnRepository.save(match{
+            it.id == testPrawnPrawn.id
+        }) } returns testPrawnPrawn
+        every { managerEmployeeRepository.findById(testManagerManagerEmployee.id!!) } returns Optional.of(testManagerManagerEmployee)
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .post("/man/acceptJobApplication/313")
+                .principal(mockPrincipal)
+        ).andExpect(MockMvcResultMatchers.status().isFound)
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that purchase requests list GET returns 200 OK`() {
+        val validPurchRequests = ArrayList<PurchaseRequest>()
+        every {  purchaseRequestRepository.findAll() } returns validPurchRequests
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("/man/purchaseRequests")
+                .principal(mockPrincipal)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("requests", validPurchRequests))
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that weapon requests list GET returns 200 OK`() {
+        val weaponRequests = ArrayList<NewWeaponRequest>()
+        every {  newWeaponRequestRepository.findAll() } returns weaponRequests
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("/man/newWeapons")
+                .principal(mockPrincipal)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("requests", weaponRequests))
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that prawn job application list GET returns 200 OK`() {
+        val vacancyRequests = ArrayList<VacancyApplicationRequest>()
+        every {  vacancyApplicationRequestRepository.findAll() } returns vacancyRequests
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("/man/jobApplications")
+                .principal(mockPrincipal)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("requests", vacancyRequests))
+    }
+
+    @WithMockUser(value = "rogomanager", roles = ["MANAGER"])
+    @Test
+    fun `Check that equipment change requests list GET returns 200 OK`() {
+        val changeRequests = ArrayList<ChangeEquipmentRequest>()
+        every { changeEquipmentRequestRepository.findAll() } returns changeRequests
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .get("/man/newEquipment")
+                .principal(mockPrincipal)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("requests", changeRequests))
     }
 
 }
