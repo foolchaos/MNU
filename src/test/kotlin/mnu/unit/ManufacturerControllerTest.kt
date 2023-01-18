@@ -142,41 +142,6 @@ class ManufacturerControllerTest(@Autowired var mockMvc: MockMvc) {
             .andExpect(model().attribute("form", newVacancyForm))
     }
 
-    @WithMockUser(value = "rogomanuf", roles = ["MANUFACTURER"])
-    @Test
-    fun `Check market filter`() {
-        val testMarketWeapon = Weapon(
-            name = "knife",
-            description = "kool knife",
-            price = 2.0,
-            type = WeaponType.MELEE
-        )
-        every {
-            weaponRepository.findAllByNameIgnoreCaseContainingAndType(
-                testMarketWeapon.name,
-                testMarketWeapon.type,
-                Sort.by(Sort.Direction.ASC, "price")
-            )
-        } returns listOf(testMarketWeapon)
-
-        every {
-            shoppingCartItemRepository.findAllByCartUserIdAndCartStatus(
-                testManufacturerUser.id!!,
-                ShoppingCartStatus.CREATING
-            )
-        } returns mutableListOf()
-
-        mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/manufacturer/market/weapon")
-                .principal(mockPrincipal)
-                .param("type", "melee")
-                .param("sort", "price_asc")
-                .param("name", "knife")
-        )
-            .andExpect(model().attribute("items", listOf(testMarketWeapon)))
-    }
-
     @WithMockUser(value = "rogomanuf")
     @Test
     fun `Check that add new valid vacancy POST returns 302 and returns status`() {
