@@ -11,9 +11,13 @@ import mnu.model.entity.employee.Employee
 import mnu.model.entity.employee.ManagerEmployee
 import mnu.model.entity.employee.PersonStatus
 import mnu.model.entity.request.PurchaseRequest
+import mnu.model.entity.request.Request
+import mnu.model.entity.request.RequestStatus
+import mnu.model.entity.request.VacancyApplicationRequest
 import mnu.model.entity.shop.ShoppingCart
 import mnu.model.entity.shop.ShoppingCartItem
 import mnu.model.entity.shop.ShoppingCartStatus
+import mnu.model.form.NewPasswordForm
 import mnu.repository.*
 import mnu.repository.request.PurchaseRequestRepository
 import mnu.repository.request.RequestRepository
@@ -221,5 +225,76 @@ public class PrawnControllerTest(@Autowired var mockMvc: MockMvc) {
         ).andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.model().attribute("items", listOf(testMarketWeapon)))
     }
+
+    @WithMockUser(value = "rogoprawn", roles = ["PRAWN"])
+    @Test
+    fun `Check that vacancies catalog filter returns 200 OK and a list of filtered vacancies`() {
+        val testVacancy = Vacancy(
+            title = "vac",
+            requiredKarma = 20L,
+            salary = 30.0,
+            workHoursPerWeek = 4
+        ).apply { vacantPlaces = 10 }
+        every { vacancyApplicationRequestRepository.findAllByPrawn(testPrawnPrawn) } returns null
+        every { vacancyRepository.findAllByOrderBySalaryAsc() } returns listOf(testVacancy)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/prawn/vacancies")
+                .principal(mockPrincipal)
+                .sessionAttr("user", testPrawnPrawn)
+                .param("sort", "salaryAsc")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("all_vacancies", listOf(testVacancy)))
+    }
+
+    @WithMockUser(value = "rogoprawn", roles = ["PRAWN"])
+    @Test
+    fun `Check that apply for job returns 302 and status`() {
+        val testVacancy = Vacancy(
+            title = "vac",
+            requiredKarma = 20L,
+            salary = 30.0,
+            workHoursPerWeek = 4
+        ).apply {
+            vacantPlaces = 10
+            id = 313
+        }
+        val testRequest = Request(
+        ).apply {
+            status = RequestStatus.PENDING
+        }
+        val testJobApplicationRequest = VacancyApplicationRequest(
+            prawn = testPrawnPrawn,
+            vacancy = testVacancy
+        ).apply {
+            request = testRequest
+        }
+        every { vacancyApplicationRequestRepository.findAllByPrawn(testPrawnPrawn) } returns mutableListOf()
+        every { vacancyRepository.findById(testVacancy.id!!) } returns Optional.of(testVacancy)
+        every { requestRepository.save(match {
+            it.status == testRequest.status
+        }) } returns testRequest
+        every { vacancyApplicationRequestRepository.save(match {
+            it.id == testJobApplicationRequest.id
+        }) } returns testJobApplicationRequest
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/prawn/vacancyApplication/313")
+                .principal(mockPrincipal)
+        ).andExpect(MockMvcResultMatchers.status().isFound)
+            .andExpect(MockMvcResultMatchers.flash().attribute("status", "Request sent. Wait for supervisor's decision."))
+    }
+
+    @WithMockUser(value = "rogoprawn", roles = ["PRAWN"])
+    @Test
+    fun `Check user profile`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/prawn/profile")
+                .principal(mockPrincipal)
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.model().attribute("form", NewPasswordForm()))
+            .andExpect(MockMvcResultMatchers.model().attribute("user", testPrawnPrawn))
+    }
+
+
 
 }
