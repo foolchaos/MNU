@@ -72,7 +72,7 @@ class ClientControllerTest(@Autowired var mockMvc: MockMvc) {
 
     private val mockPrincipal: Principal = mockk()
 
-    private val testClientUser: User = User(login = "rogoclient", role = Role.SCIENTIST).apply { id = 313 }
+    private val testClientUser: User = User(login = "rogoclient", role = Role.CUSTOMER).apply { id = 313 }
     private val testClientClient: Client = Client(
         name = "rogoclient", email = "rogoclient@rogoclient.com", type = ClientType.CUSTOMER
     ).apply {

@@ -279,7 +279,7 @@ class AdministratorController (
                         "Request id#${checkedRequest.id} accepted",
                         "Your sale request (id #${checkedRequest.id}) has been accepted.\n" +
                                 "Your \"for sale\" items are as follows:\n$cartContents\n\n" +
-                                "Please contact us at +1-800-FUCK-OFF for payment and delivery discussions."
+                                "Please contact us at +1-800-MNU-COOL for payment and delivery discussions."
                     )
 
                     // todo same as customers
@@ -367,7 +367,7 @@ class AdministratorController (
                         "Request id#${checkedRequest.id} rejected",
                         "Your purchase request (id #${checkedRequest.id}) has been rejected.\n" +
                                 "Unretrieved cart:\n$cartContents\n\n" +
-                                "If you are unsatisfied with this decision, please make a new request or contact us at +1-800-FUCK-OFF."
+                                "If you are unsatisfied with this decision, please make a new request or contact us at +1-800-MNU-COOL."
                     )
 
                     // todo same
@@ -756,7 +756,7 @@ class AdministratorController (
                     this.resolver = currentAdmin.employee
                 }
                 val newVacancy =
-                    Vacancy(checkedRequest.title, checkedRequest.salary.toDouble(), checkedRequest.requiredKarma, checkedRequest.workHoursPerWeek)
+                    Vacancy(checkedRequest.title, checkedRequest.salary, checkedRequest.requiredKarma, checkedRequest.workHoursPerWeek)
                         .apply { this.vacantPlaces = checkedRequest.vacantPlaces }
                 vacancyRepository.save(newVacancy)
 
