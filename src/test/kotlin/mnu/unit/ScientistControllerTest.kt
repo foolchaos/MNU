@@ -95,7 +95,10 @@ class ScientistControllerTest(@Autowired var mockMvc: MockMvc) {
             title = "testExperiment",
             description = "testDescription",
             examinator = testScientistScientistEmployee
-        ).apply { id = 313 }
+        ).apply {
+            id = 313
+            status = ExperimentStatus.PENDING
+        }
         every {
             experimentRepository.findAllByExaminatorIdOrderByStatusAsc(testScientistScientistEmployee.id!!)
         } returns mutableListOf(testExperiment)
@@ -103,6 +106,7 @@ class ScientistControllerTest(@Autowired var mockMvc: MockMvc) {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/sci/main")
                 .principal(mockPrincipal)
+                .sessionAttr("user", testScientistUser)
         ).andExpect(status().isOk)
             .andExpect(model().attribute("experiments", mutableListOf(testExperiment)))
     }
