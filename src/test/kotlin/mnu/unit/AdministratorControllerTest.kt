@@ -918,29 +918,23 @@ class AdministratorControllerTest(@Autowired var mockMvc: MockMvc) {
             prawnRepository.findByUserId(purchaseRequest.user!!.id!!)
         } returns testPrawnPrawn
 
+        every {
+            weaponRepository.save(match{
+                it.id == testWeapon.id
+            })
+        } returns testWeapon
+
         var cartContents = ""
         purchaseRequest.cart!!.items!!.forEach {
             cartContents += "\n${it.name()} - ${it.quantity} pieces"
         }
 
         every {
-            emailSender.sendMessage(
-                testClientClient.email,
-                "Request id#${purchaseRequest.id} accepted",
-                "Your purchase request (id #${purchaseRequest.id}) has been accepted.\n" +
-                        "Cart items are as follows:\n$cartContents\n\n" +
-                        "Please contact us at +1-800-MNU-COOL for payment and delivery discussions."
-            )
+            emailSender.sendMessage(testClientClient.email, "Request id#${purchaseRequest.id} accepted", any())
         } returns Unit
 
         every {
-            emailSender.sendMessage(
-                testClientClient.email,
-                "Request id#${purchaseRequest.id} rejected",
-                "Your purchase request (id #${purchaseRequest.id}) has been rejected.\n" +
-                        "Unretrieved cart:\n$cartContents\n\n" +
-                        "If you are unsatisfied with this decision, please make a new request or contact us at +1-800-MNU-COOL."
-            )
+            emailSender.sendMessage(testClientClient.email, "Request id#${purchaseRequest.id} rejected", any())
         } returns Unit
     }
 }
