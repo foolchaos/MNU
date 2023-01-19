@@ -12,6 +12,8 @@ class AdministratorMainPage {
         OmniElement("//*[@class='grid']//*[contains(@class, 'new-weapons')]")
     private val prawnVacanciesBtn: OmniElement =
         OmniElement("//*[@class='grid']//*[contains(@class, 'prawn-vacancies')]")
+    private val prawnJobApplicationsBtn: OmniElement =
+        OmniElement("//*[@class='grid']//*[contains(@class, 'prawn-job-applications')]")
     private val profileBtn: OmniElement = OmniElement("//*[@class='header']//*[contains(@href, 'profile')]")
 
 
@@ -33,6 +35,10 @@ class AdministratorMainPage {
 
     fun clickPrawnVacanciesBtn() {
         prawnVacanciesBtn.click()
+    }
+
+    fun clickPrawnJobApplicationsBtn() {
+        prawnJobApplicationsBtn.click()
     }
 
     fun clickProfileBtn() {
