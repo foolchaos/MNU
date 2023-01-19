@@ -18,7 +18,6 @@ class BotController(
         var description: String = "", var appearanceTime: LocalDateTime = LocalDateTime.now()
     )
 
-
     @PostMapping("/reportIncident")
     @ResponseBody
     fun reportOnANewIncident(@RequestBody incident: NewIncident): ResponseEntity<String> {

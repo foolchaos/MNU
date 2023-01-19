@@ -1,6 +1,5 @@
 package mnu.e2e.pageobject
 
-import mnu.webdriverwrapper.driver.Driver
 import mnu.webdriverwrapper.element.OmniElement
 import mnu.webdriverwrapper.element.TextContainer
 
@@ -10,6 +9,7 @@ class ShopPage {
     private val anotherTextPopupContainer: TextContainer = TextContainer("//*[contains(@class, 'flash_success') and not(@id='message')]")
     private val cartBtn: OmniElement = OmniElement("//*[contains(@class, 'desktop')]//*[@alt='Cart']")
     private val profileBtn: OmniElement = OmniElement("//*[contains(@class, 'desktop')]//*[@alt='Profile settings']")
+    private val addItemBtn: OmniElement = OmniElement("//*[contains(@class, 'desktop')]//*[@alt='Add item']")
 
     fun isLoaded(): Boolean {
         return shopSectionsList.isVisible()
@@ -41,5 +41,9 @@ class ShopPage {
 
     fun clickProfileBtn() {
         profileBtn.click()
+    }
+
+    fun clickAddItemBtn() {
+        addItemBtn.click()
     }
 }

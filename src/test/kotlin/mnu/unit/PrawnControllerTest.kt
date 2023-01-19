@@ -37,6 +37,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import java.security.Principal
 import java.util.*
 import javax.sql.DataSource
@@ -88,7 +89,7 @@ public class PrawnControllerTest(@Autowired var mockMvc: MockMvc) {
 
     private val mockPrincipal: Principal = mockk()
 
-    private val testPrawnUser: User = User(login = "rogoprawn", role = Role.PRAWN).apply { id = 313 }
+    private val testPrawnUser: User = User(login = "rogoprawn", password = "old", role = Role.PRAWN).apply { id = 313 }
     private val testManagerUser: User = User(login = "rogomanager", role = Role.MANAGER).apply { id = 313 }
     private val testPrawnPrawn: Prawn = Prawn(
         name = "prawn"
@@ -291,10 +292,7 @@ public class PrawnControllerTest(@Autowired var mockMvc: MockMvc) {
             MockMvcRequestBuilders.get("/prawn/profile")
                 .principal(mockPrincipal)
         ).andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.model().attribute("form", NewPasswordForm()))
-            .andExpect(MockMvcResultMatchers.model().attribute("user", testPrawnPrawn))
+            .andExpect(model().attribute("form", NewPasswordForm()))
+            .andExpect(model().attribute("user", testPrawnPrawn))
     }
-
-
-
 }
